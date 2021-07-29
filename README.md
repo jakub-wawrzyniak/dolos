@@ -19,3 +19,5 @@ And please, if this isn't a problem, @jakub remove `main` branch, it's driving m
 
 my vision for the project - rough draft, again, very much subject to change.
 (just so that I'm busy until we meet)
+
+I'm using react navigation as nav lib. https://reactnavigation.org/docs/getting-started/
