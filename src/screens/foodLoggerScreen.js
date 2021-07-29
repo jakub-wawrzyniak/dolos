@@ -6,7 +6,7 @@ import globalStyles from '../global/styles';
 export default function FoodLoggerScreen() {
   return (
     <View style={globalStyles.container}>
-      <Text>foodLogger</Text>
+      <Text>Food Logger</Text>
     </View>
   );
 }
