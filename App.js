@@ -1,18 +1,13 @@
-import * as React from 'react';
-import {Text, View} from 'react-native';
+import React from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import Icon from 'react-native-vector-icons/Ionicons';
-import HomeScreen from './src/screens/homeScreen';
+// https://ionic.io/ionicons - to browse Ionicons (better than github dir)
 
-// ! TEMPORARY
-function SettingsScreen() {
-  return (
-    <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-      <Text>Settings!</Text>
-    </View>
-  );
-}
+import HomeScreen from './src/screens/homeScreen';
+import FoodLoggerScreen from './src/screens/foodLoggerScreen';
+import FinanceTrackerScreen from './src/screens/financeTrackerScreen';
+import TodoListScreen from './src/screens/todoListScreen';
 
 const Tab = createBottomTabNavigator();
 
@@ -36,11 +31,29 @@ export default function App() {
           }}
         />
         <Tab.Screen
-          name="Settings"
-          component={SettingsScreen}
+          name="Food Logger"
+          component={FoodLoggerScreen}
           options={{
             tabBarIcon: () => (
-              <Icon name="settings-outline" color="#777" size={24} />
+              <Icon name="fast-food-outline" color="#777" size={24} />
+            ),
+          }}
+        />
+        <Tab.Screen
+          name="Finance Tracker"
+          component={FinanceTrackerScreen}
+          options={{
+            tabBarIcon: () => (
+              <Icon name="cash-outline" color="#777" size={24} />
+            ),
+          }}
+        />
+        <Tab.Screen
+          name="To-Do List"
+          component={TodoListScreen}
+          options={{
+            tabBarIcon: () => (
+              <Icon name="checkbox-outline" color="#777" size={24} />
             ),
           }}
         />
