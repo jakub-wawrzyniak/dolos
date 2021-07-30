@@ -1,31 +1,50 @@
-import React from 'react';
-import {View, Text, StyleSheet} from 'react-native';
+import React, {useState} from 'react';
+import {View, Text, StyleSheet, useWindowDimensions} from 'react-native';
+import Svg from 'react-native-svg';
+import {VictoryPie, VictoryLabel, VictoryAnimation} from 'victory-native';
+import styles from '../global/styles';
 
 import globalStyles from '../global/styles';
 
-export default function FoodLoggerScreen() {
+function FoodLoggerScreen() {
+  const windowWidth = useWindowDimensions().width;
+  const windowHeight = useWindowDimensions().height;
+  const [percent, setPercent] = useState(25);
+
+  const data = [
+    {x: 1, y: percent},
+    {x: 2, y: 100 - percent},
+  ];
+
+  // todo - continue progress circle
+  // https://formidable.com/open-source/victory/docs/victory-label#active
+
   return (
     <View style={globalStyles.container}>
-      <Text style={{marginBottom: 15}}>Food Logger</Text>
-      <Text style={{marginBottom: 15}}>
-        You add how many calories you ate and have a bar towards set calory goal
-        and stuff, maybe also a water-drinking reminder/tracker (if this won't
-        become a separate feature).
-      </Text>
-      <Text style={{marginBottom: 15}}>
-        The crazy thing is - noone knows how many calories they eat, so unless
-        thay eat packaged food, we'd have to provide some screenOptionsof
-        database with how much kcal is in ham slice or something like that. this
-        is to be researched and i imagine it's be like a database that user can
-        add their own entries, like we would put only the universal stuff (bread
-        butter shit etc.) and stuff like yoghurt or chocolate would be added by
-        user as a new entry since they have kcal on the packaging. (add
-        chocolate, 100g, it has x kcal) and we remember that and next time they
-        eat the same chocolate they just choose it from the list
-      </Text>
-      <Text style={{marginBottom: 15}}>I'm crazy ik</Text>
+      <Svg
+        height={150}
+        width={windowWidth - globalStyles.container.padding * 2}
+        style={{backgroundColor: 'dodgerblue'}}>
+        <VictoryPie
+          data={data}
+          height={150}
+          width={windowWidth - globalStyles.container.padding * 2}
+          padding={15}
+          innerRadius={50}
+          labels={() => null}
+        />
+        <VictoryLabel
+          x={(windowWidth - globalStyles.container.padding * 2) / 2}
+          y={75}
+          backgroundStyle={{backgroundColor: 'red'}}
+          textAnchor="middle"
+          verticalAnchor="middle"
+          text="5%"
+          style={{fontSize: 45}}
+        />
+      </Svg>
     </View>
   );
 }
 
-const styles = StyleSheet.create({});
+export default FoodLoggerScreen;
