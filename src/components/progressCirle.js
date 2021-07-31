@@ -3,29 +3,14 @@ import {View, StyleSheet, Button} from 'react-native';
 import Svg from 'react-native-svg';
 import {VictoryPie, VictoryLabel, VictoryAnimation} from 'victory-native';
 
-//? I'm not so sure if I lie this type of dopcumentation
-//https://make.wordpress.org/core/handbook/best-practices/inline-documentation-standards/javascript/
-
-/**
- * A circular progress bar.
- *
- * @param {number}  progress                Use useState for this.
- * @param {number}  [size=150]              Size of Square svg box.
- * @param {number}  [animateDuration=1000]  Duration of animations in ms.
- * @param {number}  [fontSize=30]           Size of font showing percentage.
- * @param {number}  [padding=15]            Padding around the circle.
- * @param {object}  [otherProps={}]         Applied to <View> wrapper.
- *
- * @return {JSX} JSX component.
- */
 function ProgressCircle({
-  progress = 0,
-  size = 150,
-  animateDuration = 1000,
+  progress = 0, // use useState for this
+  size = 150, // of square svg box
+  animateDuration = 1000, // in ms
   fontSize = 30,
-  thickness = 10,
-  padding = 15,
-  otherProps = {},
+  thickness = 10, // of ring
+  padding = 15, // around the circle
+  otherProps = {}, // passed to <View> wrapping the whole component
 }) {
   const data = [
     {x: 1, y: progress},
@@ -78,6 +63,7 @@ function ProgressCircle({
     </View>
   );
 }
+
 export default ProgressCircle;
 
 const styles = StyleSheet.create({
