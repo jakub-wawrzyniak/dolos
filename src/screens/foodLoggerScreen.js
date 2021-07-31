@@ -11,18 +11,26 @@ import ProgressCircle from '../components/progressCirle';
 import globalStyles from '../global/styles';
 
 function FoodLoggerScreen() {
+  function onReach100() {
+    console.log('Reached 100% !!!');
+  }
   const [progress, setProgress] = useState(46);
   return (
     <View style={globalStyles.container}>
       <View style={{alignSelf: 'center'}}>
         <ProgressCircle progress={progress} />
       </View>
+
       <Button
         title="add %"
-        // cap at 100 setPercent((percent)=>{ logic - returns value })
         onPress={() =>
           setProgress(val => {
-            return val + 15 <= 100 ? val + 15 : 100;
+            val = val + 15 <= 100 ? val + 15 : 100;
+            if (val === 100) {
+              // might want to call it in onEnd of animations but idc
+              onReach100();
+            }
+            return val;
           })
         }
         color="red"
