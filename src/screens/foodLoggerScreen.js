@@ -17,25 +17,32 @@ function FoodLoggerScreen() {
   const [progress, setProgress] = useState(46);
   return (
     <View style={globalStyles.container}>
-      <View style={{alignSelf: 'center'}}>
+      <Text style={{alignSelf: 'center'}}>component showcase</Text>
+      <View style={{alignSelf: 'center', borderWidth: 1}}>
         <ProgressCircle progress={progress} />
       </View>
 
-      <Button
-        title="add %"
-        onPress={() =>
-          setProgress(val => {
-            val = val + 15 <= 100 ? val + 15 : 100;
-            if (val === 100) {
-              // might want to call it in onEnd of animations but idc
-              onReach100();
-            }
-            return val;
-          })
-        }
-        color="red"
-      />
-      <Button title="RESET" onPress={() => setProgress(0)} color="red" />
+      <View
+        style={{
+          justifyContent: 'space-evenly',
+          flexDirection: 'row',
+        }}>
+        <Button
+          title="add %"
+          onPress={() =>
+            setProgress(val => {
+              val = val + 15 <= 100 ? val + 15 : 100;
+              if (val === 100) {
+                // might want to call it in onEnd of animations but idc
+                onReach100();
+              }
+              return val;
+            })
+          }
+          color="red"
+        />
+        <Button title="RESET" onPress={() => setProgress(0)} color="red" />
+      </View>
     </View>
   );
 }
