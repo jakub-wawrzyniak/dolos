@@ -8,14 +8,31 @@ export const createReminder = ({
   userData,
 }) => {
   PushNotification.localNotificationSchedule({
-    title: title,
+    title: 'Reminder!' || title,
     message: message,
     date: date,
     allowWhileIdle: true,
     channelId: 'main',
     repeatTime: 1 || repeatTime,
-    userInfo: userData,
+    userInfo: {} || userData,
   });
+};
+
+export const editReminder = (id, {title, message, date, userData}) => {
+  PushNotification.getScheduledLocalNotifications(notifications => {
+    notifications.every(notification => {
+      if (notification.id === id) {
+        title = title || notification.title;
+        date = date || notification.date;
+        message = message || notification.message;
+        userData = userData || notification.data;
+        return false;
+      }
+      return true;
+    });
+  });
+  PushNotification.cancelLocalNotifications({id: id});
+  createReminder({title, message, date, userData});
 };
 
 export const getAllReminders = () =>
