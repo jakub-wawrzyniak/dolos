@@ -6,7 +6,7 @@ import {
   useWindowDimensions,
   Button,
 } from 'react-native';
-import ProgressCircle from '../components/progressCirle';
+import ProgressCircle from '../components/progressCircle';
 
 import globalStyles from '../global/styles';
 
