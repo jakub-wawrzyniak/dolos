@@ -41,6 +41,12 @@ export default function App() {
     <NavigationContainer>
       <Drawer.Navigator initialRouteName="Home">
         <Drawer.Screen name="Home" component={HomeScreen} />
+        <Drawer.Screen name="Food Logger" component={FoodLoggerScreen} />
+        <Drawer.Screen
+          name="Finance Tracker"
+          component={FinanceTrackerScreen}
+        />
+        <Drawer.Screen name="ToDo List" component={TodoListScreen} />
       </Drawer.Navigator>
     </NavigationContainer>
   );

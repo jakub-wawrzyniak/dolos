@@ -27,7 +27,6 @@ export default function HomeScreen() {
           console.log('Will send notification after 5sec from now');
           const fireDate = new Date(Date.now() + 5000);
           const reminder = {
-            title: 'title',
             message: 'message',
             date: fireDate,
           };
