@@ -7,7 +7,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import HomeScreen from './src/screens/homeScreen';
 import FoodLoggerScreen from './src/screens/foodLoggerScreen';
 import FinanceTrackerScreen from './src/screens/financeTrackerScreen';
-import TodoListScreen from './src/screens/todoListScreen';
+import TodoListStack from './src/screens/todoListStack';
 
 const Drawer = createDrawerNavigator();
 
@@ -46,7 +46,7 @@ export default function App() {
           name="Finance Tracker"
           component={FinanceTrackerScreen}
         />
-        <Drawer.Screen name="ToDo List" component={TodoListScreen} />
+        <Drawer.Screen name="ToDo List" component={TodoListStack} />
       </Drawer.Navigator>
     </NavigationContainer>
   );

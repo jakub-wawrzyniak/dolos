@@ -1,12 +1,14 @@
 import React from 'react';
-import {View, Text, StyleSheet} from 'react-native';
+import {View, TouchableWithoutFeedback, StyleSheet} from 'react-native';
 import Colors from '../global/colors';
 
 export default function ListItem(props) {
   return (
-    <View style={styles.container}>
-      <View style={styles.content}>{props.children}</View>
-    </View>
+    <TouchableWithoutFeedback onPress={props.onPress}>
+      <View style={styles.container}>
+        <View style={styles.content}>{props.children}</View>
+      </View>
+    </TouchableWithoutFeedback>
   );
 }
 
