@@ -7,10 +7,23 @@ import icons from '../global/icons';
 export default function ListItem(props) {
   const [icon, setIcon] = useState(icons.notfificationOn);
 
+  // *  ******* TOGGLING NOTIFICATIONS ********
+  //  @wojtek - I have a problem with this, How are we supposed to do this?
+  // Like this button should suggest if the notification is allowed, but what
+  // If there's no notification? or when we disable a notification, and there
+  // was one scheduled, how do we handle this? do we just write not. data to
+  // some persistant storage and remove the notification all together but when
+  // the user restores it we read it from storage and create a notification
+  // with this read data so that from user's persepctive it's the same message
+  // and time? If so, what if user diables notification, and then enables it
+  // AFTER the fire date? I mean, all of this is possible to handle, but I feel
+  // like these are pretty huge decisions and thus I'm not making them alone.
+  // (but the bell icon is cute, gotta admit)
+
   //? Extract this as a notification toggle component?
   const toggleNotifications = () => {
     // add some events later
-    console.log('toggling notifications');
+    console.log('toggling notifications for item with key: ' + props.item.key);
     setIcon(
       icon === icons.notfificationOn
         ? icons.notfificationOff

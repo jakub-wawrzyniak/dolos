@@ -14,6 +14,7 @@ import globalStyles from '../global/styles';
 import ListItem from '../components/listItem';
 import Colors from '../global/colors';
 import EditNotificationModal from '../components/modals/editNotificationModal';
+import {createReminder} from '../classes/Reminder';
 
 const Stack = createStackNavigator();
 
@@ -30,10 +31,11 @@ export default function ToDoListStack() {
   );
 }
 
+// temporary, https://pusher.com/tutorials/persisting-data-react-native/
 const dataArray = [
-  {key: 1, message: 'Hello World!'},
-  {key: 2, message: 'Nice to meet you, World!'},
-  {key: 3, message: 'Goodbye World!'},
+  {key: 1, message: 'Hello World!', notificationID: ''},
+  {key: 2, message: 'Nice to meet you, World!', notificationID: ''},
+  {key: 3, message: 'Goodbye World!', notificationID: ''},
 ];
 
 // * Can move these screens below into their own files later (if needed)
@@ -46,7 +48,9 @@ export function TodoListScreen({navigation, route}) {
         renderItem={({item}) => {
           return (
             // item has to be wrapped in an object (not really, just leave it)
-            <ListItem onPress={() => navigation.navigate('Details', {item})}>
+            <ListItem
+              onPress={() => navigation.navigate('Details', {item})}
+              item={item}>
               <Text style={styles.contentText}>{item.message}</Text>
             </ListItem>
           );
@@ -63,6 +67,13 @@ export function ItemDetailsScreen({navigation, route}) {
       <EditNotificationModal
         modalVisible={modalVisible}
         setModalVisible={setModalVisible}
+        onSubmit={afterSeconds => {
+          const fireDate = new Date(Date.now() + afterSeconds * 1000);
+          createReminder({
+            message: route.params.item.message,
+            date: fireDate,
+          });
+        }}
       />
 
       <View style={styles.titleBox}>
@@ -88,7 +99,7 @@ const styles = StyleSheet.create({
   contentText: {fontSize: 14, color: Colors.textDefault},
   iconBox: {paddingRight: 12},
   titleBox: {
-    borderColor: '#ccc',
+    borderColor: Colors.borderDefault,
     borderBottomWidth: 1,
     marginBottom: 12,
     paddingBottom: 12,
