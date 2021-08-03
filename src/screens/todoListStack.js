@@ -42,7 +42,8 @@ export function TodoListScreen({navigation, route}) {
         data={dataArray}
         renderItem={({item}) => {
           return (
-            <ListItem onPress={() => navigation.navigate('Details')}>
+            // item has to be wrapped in an object (not really, just leave it)
+            <ListItem onPress={() => navigation.navigate('Details', {item})}>
               <Text>{item.message}</Text>
             </ListItem>
           );
@@ -62,7 +63,7 @@ export function ItemDetailsScreen({navigation, route}) {
         <Text style={styles.titleText}>Details</Text>
       </View>
       <View style={styles.contentBox}>
-        <Text style={styles.contentText}>Placeholder message</Text>
+        <Text style={styles.contentText}>{route.params.item.message}</Text>
       </View>
     </View>
   );
