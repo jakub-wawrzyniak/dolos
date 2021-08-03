@@ -15,5 +15,7 @@ const icons = {
       color={Colors.textDefault}
     />
   ),
+  close: <Icon name="close" size={25} color="#777" />,
+  accept: <Icon name="checkmark" size={25} color="#777" />,
 };
 export default icons;

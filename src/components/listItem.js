@@ -7,6 +7,7 @@ import icons from '../global/icons';
 export default function ListItem(props) {
   const [icon, setIcon] = useState(icons.notfificationOn);
 
+  //? Extract this as a notification toggle component?
   const toggleNotifications = () => {
     // add some events later
     console.log('toggling notifications');

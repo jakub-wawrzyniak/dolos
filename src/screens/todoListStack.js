@@ -1,10 +1,11 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {
   View,
   Text,
   StyleSheet,
   FlatList,
   TouchableWithoutFeedback,
+  Button,
 } from 'react-native';
 import {createStackNavigator} from '@react-navigation/stack';
 
@@ -12,6 +13,7 @@ import icons from '../global/icons';
 import globalStyles from '../global/styles';
 import ListItem from '../components/listItem';
 import Colors from '../global/colors';
+import EditNotificationModal from '../components/modals/editNotificationModal';
 
 const Stack = createStackNavigator();
 
@@ -55,24 +57,34 @@ export function TodoListScreen({navigation, route}) {
 }
 
 export function ItemDetailsScreen({navigation, route}) {
+  const [modalVisible, setModalVisible] = useState(false);
   return (
     <View style={styles.container}>
+      <EditNotificationModal
+        modalVisible={modalVisible}
+        setModalVisible={setModalVisible}
+      />
+
       <View style={styles.titleBox}>
         <TouchableWithoutFeedback onPress={() => navigation.goBack()}>
           <View style={styles.iconBox}>{icons.back}</View>
         </TouchableWithoutFeedback>
         <Text style={styles.titleText}>Details</Text>
       </View>
+
       <View style={styles.contentBox}>
         <Text style={styles.contentText}>{route.params.item.message}</Text>
       </View>
+
+      {/* Im unsure as where to plae it */}
+      <Button title="remind me" onPress={() => setModalVisible(true)} />
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {padding: 30},
-  contentBox: {flexDirection: 'row'},
+  container: {padding: 30, flex: 1},
+  contentBox: {flex: 1},
   contentText: {fontSize: 14, color: Colors.textDefault},
   iconBox: {paddingRight: 12},
   titleBox: {
