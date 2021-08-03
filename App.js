@@ -8,6 +8,7 @@ import HomeScreen from './src/screens/homeScreen';
 import FoodLoggerScreen from './src/screens/foodLoggerScreen';
 import FinanceTrackerScreen from './src/screens/financeTrackerScreen';
 import TodoListStack from './src/screens/todoListStack';
+import Colors from './src/global/colors';
 
 const Drawer = createDrawerNavigator();
 
@@ -39,7 +40,9 @@ export default function App() {
 
   return (
     <NavigationContainer>
-      <Drawer.Navigator initialRouteName="Home">
+      <Drawer.Navigator
+        initialRouteName="Home"
+        screenOptions={{headerTintColor: Colors.textDefault}}>
         <Drawer.Screen name="Home" component={HomeScreen} />
         <Drawer.Screen name="Food Logger" component={FoodLoggerScreen} />
         <Drawer.Screen

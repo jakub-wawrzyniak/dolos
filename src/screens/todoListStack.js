@@ -11,6 +11,7 @@ import {createStackNavigator} from '@react-navigation/stack';
 import icons from '../global/icons';
 import globalStyles from '../global/styles';
 import ListItem from '../components/listItem';
+import Colors from '../global/colors';
 
 const Stack = createStackNavigator();
 
@@ -44,7 +45,7 @@ export function TodoListScreen({navigation, route}) {
           return (
             // item has to be wrapped in an object (not really, just leave it)
             <ListItem onPress={() => navigation.navigate('Details', {item})}>
-              <Text>{item.message}</Text>
+              <Text style={styles.contentText}>{item.message}</Text>
             </ListItem>
           );
         }}
@@ -72,7 +73,7 @@ export function ItemDetailsScreen({navigation, route}) {
 const styles = StyleSheet.create({
   container: {padding: 30},
   contentBox: {flexDirection: 'row'},
-  contentText: {fontSize: 14},
+  contentText: {fontSize: 14, color: Colors.textDefault},
   iconBox: {paddingRight: 12},
   titleBox: {
     borderColor: '#ccc',
@@ -81,5 +82,10 @@ const styles = StyleSheet.create({
     paddingBottom: 12,
     flexDirection: 'row',
   },
-  titleText: {fontSize: 18, fontWeight: 'bold', flex: 1},
+  titleText: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    flex: 1,
+    color: Colors.textDefault,
+  },
 });
