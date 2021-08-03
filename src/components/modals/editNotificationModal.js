@@ -4,54 +4,56 @@ import {
   View,
   Keyboard,
   TouchableWithoutFeedback,
-  Button,
   StyleSheet,
   Text,
   TextInput,
 } from 'react-native';
-import Icon from 'react-native-vector-icons/MaterialIcons';
+import Colors from '../../global/colors';
+
 import icons from '../../global/icons';
+import IconButton from '../iconButton';
 
 export default function EditNotificationModal({
-  elementName,
   modalVisible,
   setModalVisible,
-  onSubmit, // takes the new title as parameter
-  inputBoxHeight,
-  populateField,
-  textAlignVertical,
-  isMultiline = true,
+  onSubmit, //gets the number of seconds as parameter
 }) {
-  let newValue = '';
+  let value = '';
   return (
     <Modal animationType="fade" visible={modalVisible} transparent={true}>
       <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
         <View style={styles.modalBg}>
           <View style={styles.modalContainer}>
             <View style={styles.modalTitleBox}>
-              <Text style={styles.modalTitleText}>TITLE</Text>
+              <Text style={styles.modalTitleText}>After how many seconds?</Text>
             </View>
 
             <View style={styles.inputBox}>
               <TextInput
-                style={{
-                  height: inputBoxHeight,
-                }}
-                textAlignVertical={textAlignVertical}
-                multiline={isMultiline}
-                placeholder="Input the new value..."
+                placeholder="Don't make me wait, Sweetie ;)"
+                keyboardType="numeric"
                 onChangeText={text => {
-                  newValue = text.trim();
+                  value = text.trim();
                 }}
-                defaultValue={populateField}
               />
             </View>
 
             <View style={styles.buttonBar}>
-              <TouchableWithoutFeedback>{icons.close}</TouchableWithoutFeedback>
-              <TouchableWithoutFeedback>
-                {icons.accept}
-              </TouchableWithoutFeedback>
+              <IconButton
+                icon={icons.close}
+                style={styles.iconButton}
+                onPress={() => setModalVisible(false)}
+              />
+              <IconButton
+                icon={icons.accept}
+                style={styles.iconButton}
+                onPress={() => {
+                  setModalVisible(false);
+                  onSubmit
+                    ? onSubmit(parseInt(value))
+                    : console.log('Clicked Submit, but no onSubmit provided');
+                }}
+              />
             </View>
           </View>
         </View>
@@ -70,11 +72,11 @@ const styles = StyleSheet.create({
   },
   inputBox: {
     marginHorizontal: 8,
-    marginVertical: 8,
     borderWidth: 1,
-    borderColor: '#ccc',
+    borderColor: Colors.borderDefault,
     paddingHorizontal: 6,
   },
+  iconButton: {padding: 6},
   modalBg: {
     // opacity is inherited so this is how we make it independent
     backgroundColor: 'rgba(255,255,255,0.5)',
