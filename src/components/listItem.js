@@ -23,7 +23,6 @@ export default function ListItem(props) {
   //? Extract this as a notification toggle component?
   const toggleNotifications = () => {
     // add some events later
-    console.log('toggling notifications for item with key: ' + props.item.key);
     setIcon(
       icon === icons.notfificationOn
         ? icons.notfificationOff
@@ -52,7 +51,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     borderRadius: 8,
     elevation: 3,
-    backgroundColor: 'white',
+    backgroundColor: Colors.backgroundDefault,
     marginVertical: 8,
     marginHorizontal: 3,
   },
@@ -71,7 +70,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   line: {
-    backgroundColor: '#aaa',
+    backgroundColor: Colors.borderDefault,
     width: 1,
     marginVertical: 12,
   },

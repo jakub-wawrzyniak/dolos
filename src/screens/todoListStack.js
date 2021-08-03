@@ -14,7 +14,7 @@ import globalStyles from '../global/styles';
 import ListItem from '../components/listItem';
 import Colors from '../global/colors';
 import EditNotificationModal from '../components/modals/editNotificationModal';
-import {createReminder} from '../classes/Reminder';
+import {createReminder, generateID} from '../classes/Reminder';
 
 const Stack = createStackNavigator();
 
@@ -69,7 +69,9 @@ export function ItemDetailsScreen({navigation, route}) {
         setModalVisible={setModalVisible}
         onSubmit={afterSeconds => {
           const fireDate = new Date(Date.now() + afterSeconds * 1000);
+          route.params.item.notificationID = generateID();
           createReminder({
+            id: route.params.item.notificationID,
             message: route.params.item.message,
             date: fireDate,
           });
@@ -85,9 +87,16 @@ export function ItemDetailsScreen({navigation, route}) {
 
       <View style={styles.contentBox}>
         <Text style={styles.contentText}>{route.params.item.message}</Text>
+        <Text style={[styles.contentText, {color: '#aaa'}]}>
+          I wanted this to say when you will (or won't) be notified about this.
+        </Text>
+        <Button
+          title="log item"
+          onPress={() => console.log(route.params.item)}
+        />
       </View>
 
-      {/* Im unsure as where to plae it */}
+      {/* Im unsure as where to place it */}
       <Button title="remind me" onPress={() => setModalVisible(true)} />
     </View>
   );
@@ -96,7 +105,7 @@ export function ItemDetailsScreen({navigation, route}) {
 const styles = StyleSheet.create({
   container: {padding: 30, flex: 1},
   contentBox: {flex: 1},
-  contentText: {fontSize: 14, color: Colors.textDefault},
+  contentText: {fontSize: 14, color: Colors.textDefault, marginBottom: 12},
   iconBox: {paddingRight: 12},
   titleBox: {
     borderColor: Colors.borderDefault,

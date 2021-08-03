@@ -52,7 +52,8 @@ export const getAllReminders = () =>
     });
   });
 
-// this seemed async (when doing multiple logs) and thus this horror was born.
+// this seemed async (when doing multiple logs) and thus this HORROR was born.
+// an abomination, if you will
 export const getNotificationDateFormat = async function (id) {
   let string = 'dupa';
   await new Promise((resolve, reject) => {

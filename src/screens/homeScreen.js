@@ -27,6 +27,8 @@ export default function HomeScreen() {
           console.log('Will send notification after 5sec from now');
           const fireDate = new Date(Date.now() + 5000);
           const reminder = {
+            // might want to change.
+            id: Reminder.generateID(),
             message: 'message',
             date: fireDate,
           };
@@ -40,6 +42,7 @@ export default function HomeScreen() {
           Reminder.getAllReminders();
         }}
       />
+      <Button title="remove all" onPress={Reminder.cancelAllNotifications} />
     </View>
   );
 }
