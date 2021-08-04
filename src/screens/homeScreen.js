@@ -42,7 +42,7 @@ export default function HomeScreen() {
           Reminder.getAllReminders();
         }}
       />
-      <Button title="remove all" onPress={Reminder.cancelAllNotifications} />
+      <Button title="remove all" onPress={Reminder.cancelAllReminders} />
     </View>
   );
 }

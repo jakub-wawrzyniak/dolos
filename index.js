@@ -20,17 +20,9 @@ PushNotification.configure({
   requestPermissions: Platform.OS === 'ios',
 });
 
-PushNotification.createChannel(
-  {
-    channelId: 'main',
-    channelName: 'Main Channel',
-  },
-  created => console.log(`createChannel returned ${created}`),
-);
+PushNotification.createChannel({
+  channelId: 'main',
+  channelName: 'Main Channel',
+});
 
 AppRegistry.registerComponent(appName, () => App);
-
-// debuging
-PushNotification.getChannels(function (channel_ids) {
-  console.log(channel_ids); // ['channel_id_1']
-});

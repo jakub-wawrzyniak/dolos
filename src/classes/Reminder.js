@@ -9,12 +9,14 @@ export const createReminder = ({
   userData,
 }) => {
   PushNotification.localNotificationSchedule({
+    // ! I'm not sure if this "||" syntax will work:
+    // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Logical_OR#description
     id: id,
     title: 'Reminder!' || title,
     message: message,
     date: date,
     repeatTime: 1 || repeatTime,
-    userInfo: {} || userData,
+    userInfo: userData,
     allowWhileIdle: true,
     channelId: 'main',
   });
@@ -41,10 +43,12 @@ export const editReminder = (id, {title, message, date, userData}) => {
   PushNotification.cancelLocalNotifications({id: id});
   createReminder({title, message, date, userData});
 };
-export const cancelAllNotifications = () => {
+
+export const cancelAllReminders = () => {
   console.log('Cancelling...');
   PushNotification.cancelAllLocalNotifications();
 };
+
 export const getAllReminders = () =>
   PushNotification.getScheduledLocalNotifications(all => {
     all.forEach(elem => {
@@ -53,7 +57,7 @@ export const getAllReminders = () =>
   });
 
 // this seemed async (when doing multiple logs) and thus this HORROR was born.
-// an abomination, if you will
+// Truly an abomination. If this can be done another way, by all means DO.
 export const getNotificationDateFormat = async function (id) {
   let string = 'dupa';
   await new Promise((resolve, reject) => {

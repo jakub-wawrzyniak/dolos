@@ -60,7 +60,7 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 8,
     borderBottomLeftRadius: 8,
     flex: 1,
-    justifyContent: 'center',
+    justifyContent: 'center', //? this doesn't seem to work for some reason?
   },
   icon: {
     padding: 12,

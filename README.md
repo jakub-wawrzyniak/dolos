@@ -26,6 +26,9 @@ I'm using react navigation as nav lib. https://reactnavigation.org/docs/getting-
 
 So I've been working with marcin on the notifications, and then I implemented a todo list. as of now, we can go into the details of item in todo List (which can be made into remidner list of whatever) and click "REMIND ME" and say after how many seconds. This is basic functionality, and I have faced some problems:
 
+# things I'd like to do but don't know how:
+
 - no way to track when we receive notification, as onNotification (from index.js) only triggers if you OPEN the notification for LOCAL (we are local btw). Also, I cannot find a way to know when we dismiss a notification. Basically I need an event that fires when the notification is received, but this is supprted only for remote notifications - I read in https://github.com/zo0r/react-native-push-notification#usage
 - the text saying you will be reminded in... doesn't work the way I intended so i replaced it with a placehoder for now.
-- and there is a design issue with togglig notifications, read my comment in `listItem.js` file.
+- and there is a design issue with toggling notifications, read my comment in `listItem.js` file.
+- When a notification is received it would be nice to navigate to the specific screen when we click on it. Passing navigation prop wasn't warking (empty object was passed) and only workaround I can think of i setting the initialRouteName props dynamically, but again, this is bad and Idk if will work. I need some way to call navigation.navigate(routename) from the onNotification in index.js (Cuz i can abss route, which includes routename)
