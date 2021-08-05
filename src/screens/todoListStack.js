@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -15,6 +15,7 @@ import ListItem from '../components/listItem';
 import Colors from '../global/colors';
 import EditNotificationModal from '../components/modals/editNotificationModal';
 import {createReminder, generateID} from '../utils/Reminder';
+import * as storage from '../utils/Storage';
 
 const Stack = createStackNavigator();
 
@@ -31,29 +32,55 @@ export default function ToDoListStack() {
   );
 }
 
-// temporary, https://pusher.com/tutorials/persisting-data-react-native/
-const dataArray = [
-  {key: 1, message: 'Hello World!', notificationID: ''},
-  {key: 2, message: 'Nice to meet you, World!', notificationID: ''},
-  {key: 3, message: 'Goodbye World!', notificationID: ''},
-];
-
 // * Can move these screens below into their own files later (if needed)
 
 export function TodoListScreen({navigation, route}) {
+  const [data, setData] = useState([]);
+  useEffect(() => {
+    storage.getObject('todoList').then(data => setData(data));
+  }, []);
+
+  const AddItem = ({message, notificationID}) => {
+    const key = data[0] !== undefined ? data[0].key + 1 : 1;
+    const newData = [{key, message, notificationID}, ...data];
+    setData(newData);
+    storage.storeObject('todoList', newData);
+  };
+
   return (
     <View style={globalStyles.container}>
       <FlatList
-        data={dataArray}
+        data={data}
         renderItem={({item}) => {
           return (
-            // item has to be wrapped in an object (not really, just leave it)
+            // item has to be wrapped in an object (the one in navigate)
             <ListItem
               onPress={() => navigation.navigate('Details', {item})}
               item={item}>
               <Text style={styles.contentText}>{item.message}</Text>
             </ListItem>
           );
+        }}
+      />
+      <Button
+        title="add"
+        onPress={() =>
+          AddItem({message: 'Placeholder Message', notificationID: ''})
+        }
+      />
+      <Button
+        title="log storage"
+        onPress={() =>
+          storage.getObject('todoList').then(val => {
+            console.log(val);
+          })
+        }
+      />
+      <Button
+        title="clear"
+        onPress={() => {
+          storage.storeObject('todoList', []);
+          setData([]);
         }}
       />
     </View>
