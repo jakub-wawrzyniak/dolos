@@ -13,7 +13,7 @@ import icons from '../global/icons';
 import globalStyles from '../global/styles';
 import ListItem from '../components/listItem';
 import Colors from '../global/colors';
-import EditNotificationModal from '../components/modals/editNotificationModal';
+import InputFieldModal from '../components/modals/inputFieldModal';
 import {createReminder, generateID} from '../utils/Reminder';
 import * as storage from '../utils/Storage';
 
@@ -35,12 +35,13 @@ export default function ToDoListStack() {
 // * Can move these screens below into their own files later (if needed)
 
 export function TodoListScreen({navigation, route}) {
+  const [addModalVisible, setAddModalVisible] = useState(false);
   const [data, setData] = useState([]);
   useEffect(() => {
     storage.getObject('todoList').then(data => setData(data));
   }, []);
 
-  const AddItem = ({message, notificationID}) => {
+  const AddItem = ({message, notificationID = ''}) => {
     const key = data[0] !== undefined ? data[0].key + 1 : 1;
     const newData = [{key, message, notificationID}, ...data];
     setData(newData);
@@ -49,6 +50,15 @@ export function TodoListScreen({navigation, route}) {
 
   return (
     <View style={globalStyles.container}>
+      <InputFieldModal
+        title="Input new Item"
+        modalVisible={addModalVisible}
+        setModalVisible={setAddModalVisible}
+        inputFieldProps={[{placeholder: 'message'}]}
+        onSubmit={values => {
+          AddItem({message: values[0]});
+        }}
+      />
       <FlatList
         data={data}
         renderItem={({item}) => {
@@ -62,12 +72,7 @@ export function TodoListScreen({navigation, route}) {
           );
         }}
       />
-      <Button
-        title="add"
-        onPress={() =>
-          AddItem({message: 'Placeholder Message', notificationID: ''})
-        }
-      />
+      <Button title="add" onPress={() => setAddModalVisible(true)} />
       <Button
         title="log storage"
         onPress={() =>
@@ -91,10 +96,18 @@ export function ItemDetailsScreen({navigation, route}) {
   const [modalVisible, setModalVisible] = useState(false);
   return (
     <View style={styles.container}>
-      <EditNotificationModal
+      <InputFieldModal
+        title="After how many seconds?"
         modalVisible={modalVisible}
         setModalVisible={setModalVisible}
-        onSubmit={afterSeconds => {
+        inputFieldProps={[
+          {
+            placeholder: "Don't make me wait, Sweetie ;)",
+            keyboardType: 'numeric',
+          },
+        ]}
+        onSubmit={values => {
+          const afterSeconds = parseInt(values[0]);
           const fireDate = new Date(Date.now() + afterSeconds * 1000);
           route.params.item.notificationID = generateID();
           createReminder({

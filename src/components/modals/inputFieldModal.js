@@ -13,30 +13,35 @@ import Colors from '../../global/colors';
 import icons from '../../global/icons';
 import IconButton from '../iconButton';
 
-export default function EditNotificationModal({
+export default function InputFieldModal({
+  title,
   modalVisible,
   setModalVisible,
-  onSubmit, //gets the number of seconds as parameter
+  onSubmit, // gets an array of strings with inputs in order (top to bottom)
+  inputFieldProps, // [{}, {}, ...] as many as you want input fields
 }) {
-  let value = '';
+  let values = [];
   return (
     <Modal animationType="fade" visible={modalVisible} transparent={true}>
       <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
         <View style={styles.modalBg}>
           <View style={styles.modalContainer}>
             <View style={styles.modalTitleBox}>
-              <Text style={styles.modalTitleText}>After how many seconds?</Text>
+              <Text style={styles.modalTitleText}>{title}</Text>
             </View>
 
-            <View style={styles.inputBox}>
-              <TextInput
-                placeholder="Don't make me wait, Sweetie ;)"
-                keyboardType="numeric"
-                onChangeText={text => {
-                  value = text.trim();
-                }}
-              />
-            </View>
+            {inputFieldProps.map((props, index) => {
+              return (
+                <View key={index} style={styles.inputBox}>
+                  <TextInput
+                    {...props}
+                    onChangeText={text => {
+                      values[index] = text;
+                    }}
+                  />
+                </View>
+              );
+            })}
 
             <View style={styles.buttonBar}>
               <IconButton
@@ -50,7 +55,7 @@ export default function EditNotificationModal({
                 onPress={() => {
                   setModalVisible(false);
                   onSubmit
-                    ? onSubmit(parseInt(value))
+                    ? onSubmit(values)
                     : console.log('Clicked Submit, but no onSubmit provided');
                 }}
               />
@@ -71,6 +76,7 @@ const styles = StyleSheet.create({
     marginTop: 15,
   },
   inputBox: {
+    marginTop: 8,
     marginHorizontal: 8,
     borderWidth: 1,
     borderColor: Colors.borderDefault,
@@ -93,7 +99,6 @@ const styles = StyleSheet.create({
   },
   modalTitleBox: {
     paddingBottom: 5,
-    marginBottom: 5,
   },
   modalExitButton: {
     alignItems: 'flex-end',
