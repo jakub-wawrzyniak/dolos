@@ -1,6 +1,6 @@
 import React from 'react';
 import {View, Text, StyleSheet, Button} from 'react-native';
-import * as Reminder from '../classes/Reminder';
+import * as Reminder from '../utils/Reminder';
 
 import globalStyles from '../global/styles';
 

@@ -14,7 +14,7 @@ import globalStyles from '../global/styles';
 import ListItem from '../components/listItem';
 import Colors from '../global/colors';
 import EditNotificationModal from '../components/modals/editNotificationModal';
-import {createReminder, generateID} from '../classes/Reminder';
+import {createReminder, generateID} from '../utils/Reminder';
 
 const Stack = createStackNavigator();
 
