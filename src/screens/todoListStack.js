@@ -14,7 +14,7 @@ import globalStyles from '../global/styles';
 import ListItem from '../components/listItem';
 import Colors from '../global/colors';
 import InputFieldModal from '../components/modals/inputFieldModal';
-import {createReminder, generateID} from '../utils/Reminder';
+import Reminder from '../utils/Reminder-class';
 import * as storage from '../utils/Storage';
 
 const Stack = createStackNavigator();
@@ -41,9 +41,9 @@ export function TodoListScreen({navigation, route}) {
     storage.getObject('todoList').then(data => setData(data));
   }, []);
 
-  const AddItem = ({message, notificationID = ''}) => {
+  const AddItem = ({message}) => {
     const key = data[0] !== undefined ? data[0].key + 1 : 1;
-    const newData = [{key, message, notificationID}, ...data];
+    const newData = [{key, message}, ...data];
     setData(newData);
     storage.storeObject('todoList', newData);
   };
@@ -109,12 +109,7 @@ export function ItemDetailsScreen({navigation, route}) {
         onSubmit={values => {
           const afterSeconds = parseInt(values[0]);
           const fireDate = new Date(Date.now() + afterSeconds * 1000);
-          route.params.item.notificationID = generateID();
-          createReminder({
-            id: route.params.item.notificationID,
-            message: route.params.item.message,
-            date: fireDate,
-          });
+          new Reminder(fireDate, route.params.item.message);
         }}
       />
 

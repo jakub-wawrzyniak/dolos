@@ -1,6 +1,6 @@
 import React from 'react';
 import {View, Text, StyleSheet, Button} from 'react-native';
-import * as Reminder from '../utils/Reminder';
+import Reminder from '../utils/Reminder-class';
 
 import globalStyles from '../global/styles';
 
@@ -26,23 +26,16 @@ export default function HomeScreen() {
         onPress={() => {
           console.log('Will send notification after 5sec from now');
           const fireDate = new Date(Date.now() + 5000);
-          const reminder = {
-            // might want to change.
-            id: Reminder.generateID(),
-            message: 'message',
-            date: fireDate,
-          };
-          Reminder.createReminder(reminder);
+          new Reminder(fireDate, 'Message'); // no need for instance reference.
         }}
       />
       <Button
         title="log list"
         onPress={() => {
-          console.log('list: ');
-          Reminder.getAllReminders();
+          Reminder.instances.forEach(i => console.log(i));
         }}
       />
-      <Button title="remove all" onPress={Reminder.cancelAllReminders} />
+      <Button title="remove all" onPress={Reminder.cancelAll} />
     </View>
   );
 }
