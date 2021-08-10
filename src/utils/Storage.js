@@ -1,5 +1,5 @@
 // * READ THIS - @wojtek
-// async storage is easy to use, but is not suitable for alrge data.
+// async storage is easy to use, but is not suitable for large data.
 // also, it stores in plaintext, so any sensitive data - not an option.
 // I've tried https://github.com/ammarahm-ed/react-native-mmkv-storage
 // since it claims to be super fast, but it didn't work for me.

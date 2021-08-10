@@ -32,6 +32,7 @@ export default function HomeScreen() {
       <Button
         title="log list"
         onPress={() => {
+          console.log('list:');
           Reminder.instances.forEach(i => console.log(i));
         }}
       />

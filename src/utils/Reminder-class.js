@@ -4,6 +4,8 @@ import PushNotification from 'react-native-push-notification';
 // updated most frequently (I imagine), if you want to update the rest, just
 // remember to call updateNotification() method.
 
+// * reminders are not stored as of yet, I'm working on it.
+
 class Reminder {
   static #instances = [];
   static get instances() {
@@ -15,21 +17,21 @@ class Reminder {
   #message;
   #hasNotification;
 
-  constructor(date, message) {
+  constructor(date, message, origin = 'default') {
     this.#date = date;
     this.#message = message;
     this.#id = this.generateID(); // is also a notification ID
+    this.origin = origin; // like: this was created from todo list
     this.title = 'Reminder!';
     this.repeatType = ''; // month, week, day, hour, minute, time
     this.repeatTime = 0; // if type = day, repert time = 1 means every day.
     this.userInfo = {};
     this.createNotification(); //? should this be here or we call this manually?
-    Reminder.#instances.push({
-      id: this.id,
-      date: this.date,
-      message: this.message,
-      hasNotification: this.hasNotification,
-    });
+    // @wojtek I think it should be here cuz theres no point to have such
+    // constructor if it's not here. also, why would we create a reminder with
+    // no notification? but anyway, it's a possiblity
+
+    Reminder.#instances.push(this);
   }
 
   //#region getters & setters
@@ -108,6 +110,10 @@ class Reminder {
     console.log('Cancelling all Schduled notifications.');
     PushNotification.cancelAllLocalNotifications();
     Reminder.#instances = [];
+  }
+
+  get formattedDate() {
+    return this.date.toLocaleString();
   }
 }
 

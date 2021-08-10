@@ -7,7 +7,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import HomeScreen from './src/screens/homeScreen';
 import FoodLoggerScreen from './src/screens/foodLoggerScreen';
 import FinanceTrackerScreen from './src/screens/financeTrackerScreen';
-import TodoListStack from './src/screens/todoListStack';
+import TodoListStack from './src/nav/todoListStack';
 import Colors from './src/global/colors';
 
 const Drawer = createDrawerNavigator();
