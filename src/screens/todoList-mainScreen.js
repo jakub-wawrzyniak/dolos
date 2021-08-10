@@ -56,11 +56,23 @@ export default function TodoListScreen({navigation, route}) {
       <Button title="add" onPress={() => setAddModalVisible(true)} />
       <Button
         title="log storage"
-        onPress={() =>
+        onPress={() => {
+          console.log('storage content:');
           storage.getObject('todoList').then(val => {
-            console.log(val);
-          })
-        }
+            val.forEach(item => {
+              console.log(item);
+            });
+          });
+        }}
+      />
+      <Button
+        title="log memory data"
+        onPress={() => {
+          console.log('memory content:');
+          data.forEach(item => {
+            console.log(item);
+          });
+        }}
       />
       <Button
         title="clear"
