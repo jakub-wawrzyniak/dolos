@@ -1,6 +1,5 @@
 import React from 'react';
 import {View, Text, StyleSheet, Button} from 'react-native';
-import Reminder from '../utils/Reminder-class';
 
 import globalStyles from '../global/styles';
 
@@ -20,23 +19,6 @@ export default function HomeScreen() {
         many details and options to add, customize edit etc. also, here you'd
         have some general app settings as well as profile (?) maybe idk
       </Text>
-
-      <Button
-        title="notify after 5s"
-        onPress={() => {
-          console.log('Will send notification after 5sec from now');
-          const fireDate = new Date(Date.now() + 5000);
-          new Reminder(fireDate, 'Message'); // no need for instance reference.
-        }}
-      />
-      <Button
-        title="log list"
-        onPress={() => {
-          console.log('list:');
-          Reminder.instances.forEach(i => console.log(i));
-        }}
-      />
-      <Button title="remove all" onPress={Reminder.cancelAll} />
     </View>
   );
 }

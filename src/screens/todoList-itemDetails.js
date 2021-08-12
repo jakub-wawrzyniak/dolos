@@ -10,26 +10,37 @@ import {
 import icons from '../global/icons';
 import Colors from '../global/colors';
 import InputFieldModal from '../components/modals/inputFieldModal';
-import Reminder from '../utils/Reminder-class';
+import {todoListStorageHandler as listData} from '../utils/storageHandler';
+import {
+  NotificationData,
+  generateID,
+  createNotification,
+} from '../utils/notificationHandler';
 
 export default function todoListItemDetailsScreen({navigation, route}) {
+  // we shouldn't pass whole obejcts through route.params so i pass the key.
+  // for this I assume that listData.items is initalized before i open this scr.
+  // check if this will work when we navigate to this screen directly on start.
+
+  const item = listData.items.find(item => item.key === route.params.itemKey);
   const [modalVisible, setModalVisible] = useState(false);
   const [notifInfoString, setNotifInfoString] = useState(
     'You will not be reminded about this.',
   );
+
   // like componentDidMount();
   useEffect(() => {
-    if (typeof route.params.item.reminder !== 'undefined') {
-      if (route.params.item.reminder.date.getTime() - Date.now() < 0) {
-        route.params.item.reminder.removeNotification();
+    // ? I'm unsure if this will work properly for repeating notifications.
+    if (item.notificationData.dateISO) {
+      const then = new Date(item.notificationData.dateISO);
+      if (then.getTime() < Date.now()) {
         setNotifInfoString('You will not be reminded about this.');
       } else {
-        setNotifInfoString(
-          'You will be reminded on ' + route.params.item.reminder.formattedDate,
-        );
+        setNotifInfoString(`You will be reminded on ${then.toLocaleString()}.`);
       }
     }
   }, []);
+
   return (
     <View style={styles.container}>
       <InputFieldModal
@@ -45,15 +56,19 @@ export default function todoListItemDetailsScreen({navigation, route}) {
         onSubmit={values => {
           const afterSeconds = parseInt(values[0]);
           const fireDate = new Date(Date.now() + afterSeconds * 1000);
-          const rem = new Reminder(
-            fireDate,
-            route.params.item.content,
-            'todoList',
-          );
-          route.params.item.reminder = rem;
+          const nData = new NotificationData();
+          nData.title = 'Reminder!';
+          nData.message = item.content;
+          nData.origin = 'todoList';
+          nData.dateISO = fireDate.toISOString();
+          nData.id = generateID();
+          item.notificationData = nData;
+          createNotification(nData);
+          console.log('item.notData:');
+          console.log(item.notificationData);
+          listData.storeData();
           setNotifInfoString(
-            'You will be reminded on ' +
-              route.params.item.reminder.formattedDate,
+            `You will be reminded on ${fireDate.toLocaleString()}.`,
           );
         }}
       />
@@ -66,14 +81,11 @@ export default function todoListItemDetailsScreen({navigation, route}) {
       </View>
 
       <View style={styles.contentBox}>
-        <Text style={styles.contentText}>{route.params.item.content}</Text>
+        <Text style={styles.contentText}>{item.content}</Text>
         <Text style={[styles.contentText, {color: '#aaa'}]}>
           {notifInfoString}
         </Text>
-        <Button
-          title="log item"
-          onPress={() => console.log(route.params.item)}
-        />
+        <Button title="log item" onPress={() => console.log(item)} />
       </View>
 
       {/* Im unsure as where to place it */}

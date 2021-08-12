@@ -4,9 +4,12 @@ import PushNotification from 'react-native-push-notification';
 // updated most frequently (I imagine), if you want to update the rest, just
 // remember to call updateNotification() method.
 
-// * reminders are not stored as of yet, I'm working on it.
-
+/**
+ * @deprecated Use notificationHandler.js's functions. This class will
+ * be removed in the future.
+ */
 class Reminder {
+  //! Instances are not stored properly due to private fields, have to revive.
   static #instances = [];
   static get instances() {
     return this.#instances;
@@ -18,6 +21,10 @@ class Reminder {
   #hasNotification;
 
   constructor(date, message, origin = 'default') {
+    console.warn(
+      `DEPRECATED - Use notificationHandler.js's functions.
+      This class will  be removed in the future`,
+    );
     this.#date = date;
     this.#message = message;
     this.#id = this.generateID(); // is also a notification ID
@@ -74,18 +81,22 @@ class Reminder {
   }
 
   createNotification() {
-    PushNotification.localNotificationSchedule({
-      id: this.id,
-      title: this.title,
-      message: this.message,
-      date: this.date,
-      repeatType: this.repeatType,
-      repeatTime: this.repeatTime,
-      userInfo: this.userInfo,
-      allowWhileIdle: true,
-      channelId: 'main',
-    });
-    this.#hasNotification = true;
+    if (!this.hasNotification) {
+      PushNotification.localNotificationSchedule({
+        id: this.id,
+        title: this.title,
+        message: this.message,
+        date: this.date,
+        repeatType: this.repeatType,
+        repeatTime: this.repeatTime,
+        userInfo: this.userInfo,
+        allowWhileIdle: true,
+        channelId: 'main',
+      });
+      this.#hasNotification = true;
+    } else {
+      console.log(`Reminder with ID ${this.id} already has a notification set`);
+    }
   }
 
   removeNotification() {
@@ -110,10 +121,6 @@ class Reminder {
     console.log('Cancelling all Schduled notifications.');
     PushNotification.cancelAllLocalNotifications();
     Reminder.#instances = [];
-  }
-
-  get formattedDate() {
-    return this.date.toLocaleString();
   }
 }
 

@@ -5,29 +5,28 @@ import globalStyles from '../global/styles';
 import ListItem from '../components/listItem';
 import Colors from '../global/colors';
 import InputFieldModal from '../components/modals/inputFieldModal';
-import * as storage from '../utils/Storage';
 
-class ItemData {
-  key = '';
-  content = '';
-  reminder = undefined;
-}
+import {todoListStorageHandler as listData} from '../utils/storageHandler';
 
-export default function TodoListScreen({navigation, route}) {
+export default function TodoListScreen({navigation}) {
   const [addModalVisible, setAddModalVisible] = useState(false);
   const [data, setData] = useState([]);
-  useEffect(() => {
-    storage.getObject('todoList').then(data => setData(data));
-  }, []);
 
-  const AddItem = ({content}) => {
-    const item = new ItemData();
-    item.key = data[0] !== undefined ? data[0].key + 1 : 1;
-    item.content = content;
-    const newData = [item, ...data];
-    setData(newData);
-    storage.storeObject('todoList', newData);
-  };
+  function onStorageUpdated() {
+    listData.getData().then(data => setData(data));
+  }
+
+  useEffect(() => {
+    listData.onStorageUpdated.push(onStorageUpdated);
+    listData.getData().then(data => setData(data));
+
+    return () => {
+      listData.onStorageUpdated.splice(
+        listData.onStorageUpdated.indexOf(onStorageUpdated),
+        1,
+      );
+    };
+  }, []);
 
   return (
     <View style={globalStyles.container}>
@@ -37,16 +36,17 @@ export default function TodoListScreen({navigation, route}) {
         setModalVisible={setAddModalVisible}
         inputFieldProps={[{placeholder: 'content/message'}]}
         onSubmit={values => {
-          AddItem({content: values[0]});
+          listData.addItem(values[0]);
         }}
       />
       <FlatList
         data={data}
         renderItem={({item}) => {
           return (
-            // item has to be wrapped in an object (the one in navigate)
             <ListItem
-              onPress={() => navigation.navigate('Details', {item})}
+              onPress={() =>
+                navigation.navigate('Details', {itemKey: item.key})
+              }
               item={item}>
               <Text style={styles.contentText}>{item.content}</Text>
             </ListItem>
@@ -58,18 +58,18 @@ export default function TodoListScreen({navigation, route}) {
         title="log storage"
         onPress={() => {
           console.log('storage content:');
-          storage.getObject('todoList').then(val => {
-            val.forEach(item => {
-              console.log(item);
+          listData.getData().then(arr => {
+            arr.forEach(val => {
+              console.log(val);
             });
           });
         }}
       />
       <Button
-        title="log memory data"
+        title="log data"
         onPress={() => {
-          console.log('memory content:');
-          data.forEach(item => {
+          console.log('data content:');
+          listData.items.forEach(item => {
             console.log(item);
           });
         }}
@@ -77,8 +77,7 @@ export default function TodoListScreen({navigation, route}) {
       <Button
         title="clear"
         onPress={() => {
-          storage.storeObject('todoList', []);
-          setData([]);
+          listData.clear();
         }}
       />
     </View>
