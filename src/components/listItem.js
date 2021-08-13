@@ -1,33 +1,43 @@
 import React, {useState} from 'react';
 import {View, TouchableWithoutFeedback, StyleSheet} from 'react-native';
+import {useEffect} from 'react/cjs/react.development';
 
 import Colors from '../global/colors';
 import icons from '../global/icons';
+import {turnNotifOff, turnNotifOn} from '../utils/notificationHandler';
+import {todoListStorageHandler as listStorage} from '../utils/storageHandler';
 
 export default function ListItem(props) {
-  const [icon, setIcon] = useState(icons.notfificationOn);
-
-  // *  ******* TOGGLING NOTIFICATIONS ********
-  //  @wojtek - I have a problem with this, How are we supposed to do this?
-  // Like this button should suggest if the notification is allowed, but what
-  // If there's no notification? or when we disable a notification, and there
-  // was one scheduled, how do we handle this? do we just write not. data to
-  // some persistant storage and remove the notification all together but when
-  // the user restores it we read it from storage and create a notification
-  // with this read data so that from user's persepctive it's the same message
-  // and time? If so, what if user diables notification, and then enables it
-  // AFTER the fire date? I mean, all of this is possible to handle, but I feel
-  // like these are pretty huge decisions and thus I'm not making them alone.
-  // (but the bell icon is cute, gotta admit)
+  const item = listStorage.items.find(item => item.key === props.itemKey);
+  const [icon, setIcon] = useState(
+    item.notificationActive ? icons.notfificationOn : icons.notfificationOff,
+  );
+  useEffect(() => {
+    setIcon(
+      item.notificationActive ? icons.notfificationOn : icons.notfificationOff,
+    );
+  }, [item.notificationActive]);
 
   //? Extract this as a notification toggle component?
   const toggleNotifications = () => {
-    // add some events later
-    setIcon(
-      icon === icons.notfificationOn
-        ? icons.notfificationOff
-        : icons.notfificationOn,
-    );
+    console.log(item);
+    if (item.notificationData.id !== '') {
+      if (item.notificationActive) {
+        const success = turnNotifOff(item);
+        if (success) {
+          setIcon(icons.notfificationOff);
+        }
+      } else {
+        const success = turnNotifOn(item);
+        if (success) {
+          setIcon(icons.notfificationOn);
+        }
+      }
+      listStorage.storeData();
+    } else {
+      console.log("Can't toggle, there is no notification");
+    }
+    console.log(item);
   };
 
   return (

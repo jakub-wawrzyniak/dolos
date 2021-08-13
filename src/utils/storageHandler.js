@@ -29,7 +29,7 @@ export default class StorageHandler {
   // This might be changed to house a generic itemdefinition to be reusable
   addItem(content) {
     const newItem = new TodoItemDefinition();
-    newItem.key = this.items[0] !== undefined ? this.items[0].key + 1 : 1;
+    newItem.key = !!this.items[0] ? this.items[0].key + 1 : 1;
     newItem.content = content;
     this.items = [newItem, ...this.items];
     this.storeData();
@@ -49,7 +49,7 @@ export default class StorageHandler {
   async getData() {
     try {
       const jsonValue = await AsyncStorage.getItem(this.storageKey);
-      return jsonValue != null ? JSON.parse(jsonValue) : null;
+      return jsonValue != null ? JSON.parse(jsonValue) : [];
     } catch (e) {
       console.log(e);
     }
@@ -84,5 +84,8 @@ class TodoItemDefinition {
   key = '';
   content = '';
   notificationData = new NotificationData();
+  // this remains true even if notification has already happened. this is not
+  // a problem, just something to keep in mind when working with it.
+  notificationActive = false;
 }
 export const todoListStorageHandler = new StorageHandler('todoList');

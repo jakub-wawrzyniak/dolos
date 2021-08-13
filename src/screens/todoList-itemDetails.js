@@ -15,6 +15,8 @@ import {
   NotificationData,
   generateID,
   createNotification,
+  turnNotifOn,
+  turnNotifOff,
 } from '../utils/notificationHandler';
 
 export default function todoListItemDetailsScreen({navigation, route}) {
@@ -63,9 +65,8 @@ export default function todoListItemDetailsScreen({navigation, route}) {
           nData.dateISO = fireDate.toISOString();
           nData.id = generateID();
           item.notificationData = nData;
+          item.notificationActive = true; // although true might be out of date.
           createNotification(nData);
-          console.log('item.notData:');
-          console.log(item.notificationData);
           listData.storeData();
           setNotifInfoString(
             `You will be reminded on ${fireDate.toLocaleString()}.`,
@@ -90,6 +91,22 @@ export default function todoListItemDetailsScreen({navigation, route}) {
 
       {/* Im unsure as where to place it */}
       <Button title="remind me" onPress={() => setModalVisible(true)} />
+      <Button
+        title="turn on"
+        onPress={() => {
+          if (turnNotifOn(item)) {
+            listData.storeData();
+          }
+        }}
+      />
+      <Button
+        title="turn off"
+        onPress={() => {
+          if (turnNotifOff(item)) {
+            listData.storeData();
+          }
+        }}
+      />
     </View>
   );
 }

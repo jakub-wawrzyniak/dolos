@@ -47,7 +47,8 @@ export default function TodoListScreen({navigation}) {
               onPress={() =>
                 navigation.navigate('Details', {itemKey: item.key})
               }
-              item={item}>
+              // passing item itself didn't work - some pass by ref(?) issue?
+              itemKey={item.key}>
               <Text style={styles.contentText}>{item.content}</Text>
             </ListItem>
           );
