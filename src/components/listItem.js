@@ -20,7 +20,6 @@ export default function ListItem(props) {
 
   //? Extract this as a notification toggle component?
   const toggleNotifications = () => {
-    console.log(item);
     if (item.notificationData.id !== '') {
       if (item.notificationActive) {
         const success = turnNotifOff(item);
@@ -37,7 +36,6 @@ export default function ListItem(props) {
     } else {
       console.log("Can't toggle, there is no notification");
     }
-    console.log(item);
   };
 
   return (
