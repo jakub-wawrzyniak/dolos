@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {
   Modal,
   View,
@@ -7,9 +7,10 @@ import {
   StyleSheet,
   Text,
   TextInput,
+  Pressable
 } from 'react-native';
 import Colors from '../../global/colors';
-
+import OnOffSwitch from '../onOffSwitch';
 import RoundButton from '../roundButton';
 
 export default function TodoListAddModal({
@@ -17,53 +18,56 @@ export default function TodoListAddModal({
   setModalVisible,
   onSubmit, // gets an array of strings with inputs in order (top to bottom)
 }) {
+  const [isNotificationOn, setIsNotificationOn] = useState(false) // Unused for now
   let values = [];
   return (
     <Modal animationType="fade" visible={modalVisible} transparent={true}>
-      <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-        <View style={styles.modalBg}>
-          <View style={styles.modalContainer}>
-            <TextInput
-              style={styles.inputBox}
-              placeholder="Title"
-              onChangeText={text => {
-                values[0] = text;
+      <Pressable style={styles.modalBg} onPress={() => Keyboard.dismiss()}>
+        <View style={styles.modalContainer}>
+          <TextInput
+            style={styles.inputBox}
+            placeholder="Title"
+            onChangeText={text => {
+              values[0] = text;
+            }}
+          />
+          <TextInput
+            style={styles.inputBox}
+            placeholder="Description"
+            onChangeText={text => {
+              values[1] = text;
+            }}
+          />
+
+          <Text style={styles.text}>Due Jan 15 at 9:45 AM</Text>
+
+          <View style={{flexDirection: 'row'}}>
+            <OnOffSwitch
+              onTitle="Do" offTitle="Don't"
+              isOn={isNotificationOn}
+              setIsOn={setIsNotificationOn}
+            />
+            <Text style={styles.text}>send me a notification</Text>
+          </View>
+
+          {/* todo - create custom buttons */}
+          <View style={styles.buttonBar}>
+            <RoundButton
+              title="cancel"
+              color={Colors.cancelGrey}
+              onPress={() => setModalVisible(false)}
+            />
+            <RoundButton
+              title="accept"
+              color={Colors.acceptGreen}
+              onPress={() => {
+                onSubmit(values);
+                setModalVisible(false);
               }}
             />
-            <TextInput
-              style={styles.inputBox}
-              placeholder="description"
-              onChangeText={text => {
-                values[1] = text;
-              }}
-            />
-
-            <Text style={styles.text}>Due Jan 15 at 9:45 AM</Text>
-
-            <View style={{flexDirection: 'row'}}>
-              <Text style={[styles.text, {paddingRight: 15}]}>DO/DON'T</Text>
-              <Text style={styles.text}>send me a notification</Text>
-            </View>
-
-            {/* todo - create custom buttons */}
-            <View style={styles.buttonBar}>
-              <RoundButton
-                title="cancel"
-                color={Colors.cancelGrey}
-                onPress={() => setModalVisible(false)}
-              />
-              <RoundButton
-                title="accept"
-                color={Colors.acceptGreen}
-                onPress={() => {
-                  onSubmit(values);
-                  setModalVisible(false);
-                }}
-              />
-            </View>
           </View>
         </View>
-      </TouchableWithoutFeedback>
+      </Pressable>
     </Modal>
   );
 }
@@ -78,7 +82,7 @@ const styles = StyleSheet.create({
   },
   inputBox: {
     padding: 0, // reset default padding
-    paddingHorizontal: 8,
+    // paddingHorizontal: 8, A suggestion, looks better to me
     borderBottomWidth: 1,
     borderColor: Colors.textDefault,
     marginVertical: 12,
@@ -92,9 +96,9 @@ const styles = StyleSheet.create({
   },
   modalContainer: {
     backgroundColor: 'white',
-    width: '80%',
+    width: '88%',
     paddingVertical: 25,
-    paddingHorizontal: 50,
+    paddingHorizontal: 35,
     borderRadius: 20,
   },
   text: {
