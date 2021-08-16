@@ -2,33 +2,21 @@
 
 A Management app built with React Native.
 
-# wojtek kowalczyk
+# problems, hiccups and unfinished business.
 
-So here's what I did.
-I initialized the project on master branch, a clean hello world, and created a dev branch.
+- Reminders are not stored in persistant storage. Notifications (if set) are, since they do that out of the box.
+- The bell icon thingy is useless, but the UI is to be reworked anyway (I suppose)
 
-some ideas for workflow - very much subject to change:
+# Storage and reminder rework - 12.08.2021 @wojtek:
 
-- As little code as possible in `App.js` - modular
-- All the source code (apart from App.js and index.js) in `./src` directory
-- keep the files clean, resonably named, categorized in directories
-
-And please, if this isn't a problem, @jakub remove `main` branch, it's driving me nuts its not master (so i created master) xd sorry
-
-# wojtek branch
-
-my vision for the project - rough draft, again, very much subject to change.
-(just so that I'm busy until we meet)
-
-I'm using react navigation as nav lib. https://reactnavigation.org/docs/getting-started/
-
-# 03.07.21 @wojtek on notifications and todolist
-
-So I've been working with marcin on the notifications, and then I implemented a todo list. as of now, we can go into the details of item in todo List (which can be made into remidner list of whatever) and click "REMIND ME" and say after how many seconds. This is basic functionality, and I have faced some problems:
-
-# things I'd like to do but don't know how:
-
-- no way to track when we receive notification, as onNotification (from index.js) only triggers if you OPEN the notification for LOCAL (we are local btw). Also, I cannot find a way to know when we dismiss a notification. Basically I need an event that fires when the notification is received, but this is supprted only for remote notifications - I read in https://github.com/zo0r/react-native-push-notification#usage
-- the text saying you will be reminded in... doesn't work the way I intended so i replaced it with a placehoder for now.
-- and there is a design issue with toggling notifications, read my comment in `listItem.js` file.
-- When a notification is received it would be nice to navigate to the specific screen when we click on it. Passing navigation prop wasn't warking (empty object was passed) and only workaround I can think of i setting the initialRouteName props dynamically, but again, this is bad and Idk if will work. I need some way to call navigation.navigate(routename) from the onNotification in index.js (Cuz i can abss route, which includes routename)
+So I reworked the storage system and setting the reminders in our App.
+The storage handler class is there, and in `storageHandler.js` file we create instances of it for features we want, like I did for my todo list. basically you want storage handler for something, you create an instance in the mentioned file and import it to your components/screens/whatever - the storage is isolated. Also, it's multiple instances to have separate storage keys which you don't have to rememeber, just pass once on creation.
+The purpose of this was that I read you should not pass large objects to route.params, rather you should pass say an ID of an object, and read this object from your database in the component directly, so that's what I allowed us to do.
+What's more I implemented a sort of event (based on how events in C# work, or at least on how I think they work), it's a list of functions that you add you listener functions to (they have to be declared and names I think), and when the event takes place (on storage updated) it loops through the list calling all functions in it.
+I use it to update states in my components, cuz my thought process was like: "these components are only to render stuff, so why would I handle data logic in them?" so I isolated data logic into storage handler class, and the components just listen for storage updated event and when it happens they update their states to re-render new data to the screen. I don't know about performance, but fuck this - we probly gonna need to implement a database (like watermelondb) sooner or later so this will have to get reworked anyway...)
+So now that we have storage explined, the reminders...
+I thougt to myself, remidners are just notifications, so why make them out to be more than that? I found we need to store them somehow, but then it hit me, we don't need to store them whole (them = the notifications), but just the essentials (namely the date, since i need it to show when you will or won't be notified in my component). So to my todoList item definition I added the notificationData object, which is an object (instance of a class in fact, but it doesn't matter since it gets transformed to a regular unnamed object after parsing from JSON - storage) which holds necessary information - signatures, snippets if you will - This makes it so the notification are handled by the lib, and we just store what we need to know about them. Additionally, when we want to remove the notification, we just cancel it, and we have the id in notificationData in the ItemDefinition object.
+Editing is just removing this notification and creating new with altered data.
+Now, I was thinking about enabling and disabling notifications (like this bell icon/button I implemented) and It turns out, that with this approch, we just delete the notification to disable it, but don't alter the stored data, and when we want to re-enable it, the data is still there sitting on an item, so we just create a new one from it.
+In theory, this is brilliant, but I haven't yet implemented this turning notifications on and off. It's what I'm going to do next.
+Should you have any questions to the code, feel free to DM me. BUT PLEASE LOOK INTO THE CODE.
