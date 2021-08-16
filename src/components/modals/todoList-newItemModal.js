@@ -11,7 +11,7 @@ import {
 } from 'react-native';
 import Colors from '../../global/colors';
 import OnOffSwitch from '../onOffSwitch';
-import RoundButton from '../roundButton';
+import EditButtons from '../editButtons';
 
 export default function TodoListAddModal({
   modalVisible,
@@ -50,22 +50,13 @@ export default function TodoListAddModal({
             <Text style={styles.text}>send me a notification</Text>
           </View>
 
-          {/* todo - create custom buttons */}
-          <View style={styles.buttonBar}>
-            <RoundButton
-              title="cancel"
-              color={Colors.cancelGrey}
-              onPress={() => setModalVisible(false)}
-            />
-            <RoundButton
-              title="accept"
-              color={Colors.acceptGreen}
-              onPress={() => {
-                onSubmit(values);
-                setModalVisible(false);
-              }}
-            />
-          </View>
+          <EditButtons
+            onCancel={() => setModalVisible(false)}
+            onAccept={() => {
+              onSubmit(values);
+              setModalVisible(false);
+            }}
+          />
         </View>
       </Pressable>
     </Modal>
