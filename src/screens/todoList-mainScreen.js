@@ -42,9 +42,7 @@ export default function TodoListScreen({navigation}) {
         renderItem={({item}) => {
           return (
             <ListItem
-              onPress={() =>
-                navigation.navigate('Details', {itemKey: item.key})
-              }
+              onPress={() => setAddModalVisible(true)}
               // passing item itself didn't work - some pass by ref(?) issue?
               itemKey={item.key}>
               <Text style={styles.contentText}>{item.content}</Text>

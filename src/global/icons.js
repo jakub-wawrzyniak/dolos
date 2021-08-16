@@ -4,18 +4,21 @@ import Colors from './colors';
 
 const icons = {
   // might want to take color from global color set file
-  back: <Icon name="arrow-back" size={25} color={Colors.textDefault} />,
+  back: <Icon name="arrow-back" size={25} color={Colors.iconDefault} />,
   notfificationOn: (
-    <Icon name="notifications-outline" size={25} color={Colors.textDefault} />
+    <Icon name="notifications-outline" size={25} color={Colors.iconDefault} />
   ),
   notfificationOff: (
     <Icon
       name="notifications-off-outline"
       size={25}
-      color={Colors.textDefault}
+      color={Colors.iconDefault}
     />
   ),
-  close: <Icon name="close" size={25} color="#777" />,
-  accept: <Icon name="checkmark" size={25} color="#777" />,
+  close: <Icon name="close" size={25} color={Colors.iconDefault} />,
+  accept: <Icon name="checkmark" size={25} color={Colors.iconDefault} />,
+  settings: (
+    <Icon name="ellipsis-vertical" size={25} color={Colors.iconDefault} />
+  ),
 };
 export default icons;

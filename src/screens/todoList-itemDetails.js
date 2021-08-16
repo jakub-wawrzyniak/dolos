@@ -1,3 +1,5 @@
+//! UNUSED - for reference/just in case
+
 import React, {useState, useEffect} from 'react';
 import {
   View,
@@ -19,7 +21,9 @@ import {
   turnNotifOff,
 } from '../utils/notificationHandler';
 
+/** @deprecated */
 export default function todoListItemDetailsScreen({navigation, route}) {
+  console.warn('[todoListItemDetailsScreen] is deprecated.');
   // we shouldn't pass whole obejcts through route.params so i pass the key.
   // for this I assume that listData.items is initalized before i open this scr.
   // check if this will work when we navigate to this screen directly on start.

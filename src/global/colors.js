@@ -1,6 +1,7 @@
 const Colors = {
   backgroundDefault: 'white',
   textDefault: '#2c2c2c',
+  iconDefault: '#2c2c2c',
   borderDefault: '#ccc',
   foregroundGrey: '#ededed',
   acceptGreen: '#ffb55e',
