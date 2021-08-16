@@ -3,7 +3,6 @@ import {
   Modal,
   View,
   Keyboard,
-  TouchableWithoutFeedback,
   StyleSheet,
   Text,
   TextInput,
@@ -12,6 +11,7 @@ import {
 import Colors from '../../global/colors';
 import OnOffSwitch from '../onOffSwitch';
 import EditButtons from '../editButtons';
+import DatePicker from '../datePicker';
 
 export default function TodoListAddModal({
   modalVisible,
@@ -19,6 +19,7 @@ export default function TodoListAddModal({
   onSubmit, // gets an array of strings with inputs in order (top to bottom)
 }) {
   const [isNotificationOn, setIsNotificationOn] = useState(false) // Unused for now
+  const [date, setDate] = useState(new Date())
   let values = [];
   return (
     <Modal animationType="fade" visible={modalVisible} transparent={true}>
@@ -39,7 +40,7 @@ export default function TodoListAddModal({
             }}
           />
 
-          <Text style={styles.text}>Due Jan 15 at 9:45 AM</Text>
+          <DatePicker date={date} setDate={setDate} />
 
           <View style={{flexDirection: 'row'}}>
             <OnOffSwitch
