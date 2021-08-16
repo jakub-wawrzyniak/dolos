@@ -4,9 +4,9 @@ import {View, Text, StyleSheet, FlatList, Button} from 'react-native';
 import globalStyles from '../global/styles';
 import ListItem from '../components/listItem';
 import Colors from '../global/colors';
-import InputFieldModal from '../components/modals/inputFieldModal';
-
+import TodoListAddModal from '../components/modals/todoList-newItemModal';
 import {todoListStorageHandler as listData} from '../utils/storageHandler';
+import RoundButton from '../components/roundButton';
 
 export default function TodoListScreen({navigation}) {
   const [addModalVisible, setAddModalVisible] = useState(false);
@@ -30,13 +30,11 @@ export default function TodoListScreen({navigation}) {
 
   return (
     <View style={globalStyles.container}>
-      <InputFieldModal
-        title="Input new Item"
+      <TodoListAddModal
         modalVisible={addModalVisible}
         setModalVisible={setAddModalVisible}
-        inputFieldProps={[{placeholder: 'content/message'}]}
         onSubmit={values => {
-          listData.addItem(values[0]);
+          listData.addItem(values[0], values[1], 'January 15, 2020 09:45:00');
         }}
       />
       <FlatList
@@ -54,29 +52,15 @@ export default function TodoListScreen({navigation}) {
           );
         }}
       />
-      <Button title="add" onPress={() => setAddModalVisible(true)} />
-      <Button
-        title="log storage"
-        onPress={() => {
-          console.log('storage content:');
-          listData.getData().then(arr => {
-            arr.forEach(val => {
-              console.log(val);
-            });
-          });
-        }}
+
+      <RoundButton
+        title="Add Item"
+        color={Colors.acceptGreen}
+        onPress={() => setAddModalVisible(true)}
       />
-      <Button
-        title="log data"
-        onPress={() => {
-          console.log('data content:');
-          listData.items.forEach(item => {
-            console.log(item);
-          });
-        }}
-      />
-      <Button
-        title="clear"
+      <RoundButton
+        title="Clear Storage"
+        color={Colors.removeRed}
         onPress={() => {
           listData.clear();
         }}
