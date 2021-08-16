@@ -7,6 +7,7 @@ import Colors from '../global/colors';
 import TodoListAddModal from '../components/modals/todoList-newItemModal';
 import {todoListStorageHandler as listData} from '../utils/storageHandler';
 import RoundButton from '../components/roundButton';
+import Separator from '../components/separator';
 
 export default function TodoListScreen({navigation}) {
   const [addModalVisible, setAddModalVisible] = useState(false);
