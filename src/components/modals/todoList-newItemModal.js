@@ -6,7 +6,7 @@ import {
   StyleSheet,
   Text,
   TextInput,
-  Pressable
+  Pressable,
 } from 'react-native';
 import Colors from '../../global/colors';
 import OnOffSwitch from '../onOffSwitch';
@@ -18,8 +18,8 @@ export default function TodoListAddModal({
   setModalVisible,
   onSubmit, // gets an array of strings with inputs in order (top to bottom)
 }) {
-  const [isNotificationOn, setIsNotificationOn] = useState(false) // Unused for now
-  const [date, setDate] = useState(new Date())
+  const [isNotificationOn, setIsNotificationOn] = useState(false); // Unused for now
+  const [date, setDate] = useState(new Date());
   let values = [];
   return (
     <Modal animationType="fade" visible={modalVisible} transparent={true}>
@@ -44,7 +44,8 @@ export default function TodoListAddModal({
 
           <View style={{flexDirection: 'row'}}>
             <OnOffSwitch
-              onTitle="Do" offTitle="Don't"
+              onTitle="Do"
+              offTitle="Don't"
               isOn={isNotificationOn}
               setIsOn={setIsNotificationOn}
             />

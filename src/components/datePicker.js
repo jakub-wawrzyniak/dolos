@@ -1,72 +1,77 @@
-import React, {Fragment, useState} from 'react'
-import {Text, Pressable, View, StyleSheet, Modal} from 'react-native'
+import React, {Fragment, useState} from 'react';
+import {Text, Pressable, View, StyleSheet} from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 
+// ! if dialog box were to open twice: https://github.com/react-native-datetimepicker/datetimepicker/issues/54#issuecomment-552951685
+// !BUG: sometimes after opening the datetimepicker the screen just goes white.
+
 function TimePicker({date, setDate}) {
-    const [isPickerVisible, setIsPickerVisible] = useState(false)
-    return <Fragment>
-        <Modal
-            visible={isPickerVisible}
-            onRequestClose={()=>{setIsPickerVisible(false)}}
-        >
-            <DateTimePicker
-                mode="time"
-                display="clock"
-                value={date}
-                onChange={(event, date)=>{
-                    setDate(date)
-                    setIsPickerVisible(false)
-                }}
-            />
-        </Modal>
-        <Pressable onPress={()=>setIsPickerVisible(true)}>
-            <Text style={style.textPicker}>{date.toString().slice(16, 21)}</Text>
-        </Pressable>
+  const [isPickerVisible, setIsPickerVisible] = useState(false);
+  return (
+    //? why fragment and not just view? @wojtek
+    <Fragment>
+      {isPickerVisible && (
+        <DateTimePicker
+          mode="time"
+          display="clock"
+          value={date}
+          onChange={(event, newDate) => {
+            setIsPickerVisible(false); // * THIS HAS TO BE BEFORE setDate
+            setDate(newDate || date); // so it doesn't crash on cancel
+          }}
+        />
+      )}
+      <Pressable onPress={() => setIsPickerVisible(true)}>
+        <Text style={style.textPicker}>{date.toString().slice(16, 21)}</Text>
+      </Pressable>
     </Fragment>
+  );
 }
 
 function DayPicker({date, setDate}) {
-    const [isPickerVisible, setIsPickerVisible] = useState(false)    
-    return <Fragment>
-        <Modal
-            visible={isPickerVisible}
-            onRequestClose={()=>{setIsPickerVisible(false)}}
-        >
-            <DateTimePicker
-                mode="date"
-                display="calendar"
-                value={date}
-                onChange={(event, date)=>{
-                    setDate(date)
-                    setIsPickerVisible(false)
-                }}
-            />
-        </Modal>
-        <Pressable onPress={()=>setIsPickerVisible(true)}>
-            <Text style={style.textPicker}>{date.toString().slice(4, 10)}</Text>
-        </Pressable>
+  const [isPickerVisible, setIsPickerVisible] = useState(false);
+  return (
+    <Fragment>
+      {isPickerVisible && (
+        <DateTimePicker
+          mode="date"
+          display="calendar"
+          value={date}
+          onChange={(event, newDate) => {
+            setIsPickerVisible(false); // * THIS HAS TO BE BEFORE setDate
+            // otherwise, the dialog opens twice (like in the link on the top)
+            setDate(newDate || date); // so it doesn't crash on cancel
+          }}
+        />
+      )}
+      <Pressable onPress={() => setIsPickerVisible(true)}>
+        <Text style={style.textPicker}>{date.toString().slice(4, 10)}</Text>
+      </Pressable>
     </Fragment>
+  );
 }
 
 export default function DatePicker({date, setDate}) {
-    return <View style={style.view}>
-        <Text>Due by</Text>
-        <DayPicker date={date} setDate={setDate}/>
-        <Text>at</Text>
-        <TimePicker date={date} setDate={setDate}/>
+  return (
+    <View style={style.view}>
+      <Text>Due by</Text>
+      <DayPicker date={date} setDate={setDate} />
+      <Text>at</Text>
+      <TimePicker date={date} setDate={setDate} />
     </View>
+  );
 }
 
 const style = StyleSheet.create({
-    view: {
-        flexDirection: 'row',
-        justifyContent: "space-around",
-        alignItems: 'center',
-        marginVertical: 20,
-    },
+  view: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignItems: 'center',
+    marginVertical: 20,
+  },
 
-    textPicker: {
-        fontSize: 16,
-        fontWeight: 'bold'
-    }
-})
+  textPicker: {
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+});
