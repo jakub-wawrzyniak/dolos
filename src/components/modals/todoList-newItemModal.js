@@ -13,30 +13,38 @@ import OnOffSwitch from '../onOffSwitch';
 import EditButtons from '../editButtons';
 import DatePicker from '../datePicker';
 
-export default function TodoListAddModal({
-  modalVisible,
-  setModalVisible,
-  onSubmit, // gets an array of strings with inputs in order (top to bottom)
-}) {
-  const [isNotificationOn, setIsNotificationOn] = useState(false); // Unused for now
-  const [date, setDate] = useState(new Date());
-  let values = [];
+export function TodoListAddModal({onAccept, onCancel, onRequestClose, item}) {
+  const [isNotificationOn, setIsNotificationOn] = useState(
+    item.notificationActive,
+  );
+  const [date, setDate] = useState(new Date(item.dueDateISO || Date.now()));
+  // I will be using newItem directly. It is a state since I need it to persist
+  // between rerenders (opening date picker causes rerender)
+  // this persistance is overwritten on modal open by passing correct item.
+  // ! DO NOT USE setNewItem unless you know what you're doing
+  const [newItem, setNewItem] = useState({...item});
+
   return (
-    <Modal animationType="fade" visible={modalVisible} transparent={true}>
+    <Modal
+      animationType="fade"
+      transparent={true}
+      onRequestClose={onRequestClose}>
       <Pressable style={styles.modalBg} onPress={() => Keyboard.dismiss()}>
         <View style={styles.modalContainer}>
           <TextInput
             style={styles.inputBox}
-            placeholder="Title"
+            placeholder="Title - add"
+            defaultValue={newItem.title}
             onChangeText={text => {
-              values[0] = text;
+              newItem.title = text;
             }}
           />
           <TextInput
             style={styles.inputBox}
             placeholder="Description"
+            defaultValue={newItem.content}
             onChangeText={text => {
-              values[1] = text;
+              newItem.content = text;
             }}
           />
 
@@ -53,10 +61,12 @@ export default function TodoListAddModal({
           </View>
 
           <EditButtons
-            onCancel={() => setModalVisible(false)}
+            onCancel={() => onCancel()}
             onAccept={() => {
-              onSubmit(values);
-              setModalVisible(false);
+              //  pack and send data
+              newItem.dueDateISO = date.toISOString();
+              newItem.notificationActive = isNotificationOn;
+              onAccept(newItem);
             }}
           />
         </View>

@@ -4,17 +4,22 @@ import {View, Text, StyleSheet, FlatList, Button} from 'react-native';
 import globalStyles from '../global/styles';
 import ListItem from '../components/listItem';
 import Colors from '../global/colors';
-import TodoListAddModal from '../components/modals/todoList-newItemModal';
+import {TodoListAddModal} from '../components/modals/todoList-newItemModal';
 import {todoListStorageHandler as listData} from '../utils/storageHandler';
 import RoundButton from '../components/roundButton';
-import Separator from '../components/separator';
 
-export default function TodoListScreen({navigation}) {
+export default function TodoListScreen() {
   const [addModalVisible, setAddModalVisible] = useState(false);
   const [data, setData] = useState([]);
+  const [itemForModal, setItemForModal] = useState(new listData.item());
+  const [editMode, setEditMode] = useState(false);
 
   function onStorageUpdated() {
     listData.getData().then(data => setData(data));
+  }
+  function modalCleanUp() {
+    setAddModalVisible(false);
+    setEditMode(false);
   }
 
   useEffect(() => {
@@ -31,19 +36,31 @@ export default function TodoListScreen({navigation}) {
 
   return (
     <View style={globalStyles.container}>
-      <TodoListAddModal
-        modalVisible={addModalVisible}
-        setModalVisible={setAddModalVisible}
-        onSubmit={values => {
-          listData.addItem(values[0], values[1], 'January 15, 2020 09:45:00');
-        }}
-      />
+      {addModalVisible && ( // this way modal is only rendered when needed.
+        <TodoListAddModal
+          onAccept={item => {
+            if (editMode) {
+              listData.editItem(item);
+            } else {
+              listData.addItem(item);
+            }
+            modalCleanUp();
+          }}
+          onCancel={() => modalCleanUp()}
+          onRequestClose={() => modalCleanUp()}
+          item={itemForModal}
+        />
+      )}
       <FlatList
         data={data}
         renderItem={({item}) => {
           return (
             <ListItem
-              onPress={() => setAddModalVisible(true)}
+              onPress={() => {
+                setEditMode(true);
+                setItemForModal(item); // give it THE item to edit
+                setAddModalVisible(true);
+              }}
               // passing item itself didn't work - some pass by ref(?) issue?
               itemKey={item.key}>
               <Text style={styles.contentText}>{item.content}</Text>
@@ -51,11 +68,13 @@ export default function TodoListScreen({navigation}) {
           );
         }}
       />
-
       <RoundButton
         title="Add Item"
         color={Colors.acceptGreen}
-        onPress={() => setAddModalVisible(true)}
+        onPress={() => {
+          setAddModalVisible(true);
+          setItemForModal(new listData.item()); // give it blank item
+        }}
       />
       <RoundButton
         title="Clear Storage"

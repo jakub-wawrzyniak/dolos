@@ -26,20 +26,6 @@ export default class StorageHandler {
     });
   }
 
-  // This might be changed to house a generic itemdefinition to be reusable
-  addItem(title, content, dueDate) {
-    const newItem = new TodoItemDefinition();
-    newItem.key = !!this.items[0] ? this.items[0].key + 1 : 1;
-    newItem.title = title;
-    newItem.content = content;
-    // * TEMPORARY ------- change to incorporate Date input.
-    // can use string like 'December 17, 1995 03:24:00' in constructors for now
-    newItem.dueDateISO = new Date(dueDate).toISOString();
-    // * -----------------
-    this.items = [newItem, ...this.items];
-    this.storeData();
-  }
-
   async storeData() {
     try {
       const jsonValue = JSON.stringify(this.items);
@@ -55,14 +41,6 @@ export default class StorageHandler {
     try {
       const jsonValue = await AsyncStorage.getItem(this.storageKey);
       return jsonValue != null ? JSON.parse(jsonValue) : [];
-    } catch (e) {
-      console.log(e);
-    }
-  }
-
-  async removeByKey(key) {
-    try {
-      await AsyncStorage.removeItem(key);
     } catch (e) {
       console.log(e);
     }
@@ -85,14 +63,40 @@ export default class StorageHandler {
   }
 }
 
-class TodoItemDefinition {
-  key = '';
-  title = '';
-  content = '';
-  notificationData = new NotificationData();
-  dueDateISO = '';
-  // this remains true even if notification has already happened. this is not
-  // a problem, just something to keep in mind when working with it.
-  notificationActive = false;
+// I'd imagine we'll have similar classes for all features.
+class TodoListStorageHandler extends StorageHandler {
+  constructor() {
+    super('todoList');
+    this.item = class Item {
+      key = '';
+      title = '';
+      content = '';
+      notificationData = new NotificationData();
+      dueDateISO = '';
+      notificationActive = false; // stays true after notif. happened
+    };
+  }
+
+  addItem(newItem) {
+    newItem.key = !!this.items[0] ? this.items[0].key + 1 : 1;
+    this.items = [newItem, ...this.items];
+    this.storeData();
+  }
+
+  removeItem(itemKey) {
+    this.items = this.items.filter(item => item.key !== itemKey);
+    this.storeData();
+  }
+
+  /** replaces item with given key with newItem */
+  editItem(newItem) {
+    this.items = this.items.map(item => {
+      if (item.key === newItem.key) {
+        return newItem;
+      }
+      return item;
+    });
+    this.storeData();
+  }
 }
-export const todoListStorageHandler = new StorageHandler('todoList');
+export const todoListStorageHandler = new TodoListStorageHandler('todoList');

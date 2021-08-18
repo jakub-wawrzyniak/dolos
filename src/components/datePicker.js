@@ -3,7 +3,6 @@ import {Text, Pressable, View, StyleSheet} from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 
 // ! if dialog box were to open twice: https://github.com/react-native-datetimepicker/datetimepicker/issues/54#issuecomment-552951685
-// !BUG: sometimes after opening the datetimepicker the screen just goes white.
 
 function TimePicker({date, setDate}) {
   const [isPickerVisible, setIsPickerVisible] = useState(false);
@@ -17,6 +16,7 @@ function TimePicker({date, setDate}) {
           value={date}
           onChange={(event, newDate) => {
             setIsPickerVisible(false); // * THIS HAS TO BE BEFORE setDate
+            newDate.setSeconds(0, 0); // so we set to only full minutes
             setDate(newDate || date); // so it doesn't crash on cancel
           }}
         />
