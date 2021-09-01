@@ -21,6 +21,13 @@ export default function RoundButton({title, onPress, color, style}) {
 }
 
 const styles = StyleSheet.create({
-  container: {borderRadius: 50},
-  text: {alignSelf: 'center', paddingVertical: 10, paddingHorizontal: 20},
+  container: {
+    borderRadius: 50,
+    marginVertical: 5,
+  },
+  text: {
+    alignSelf: 'center',
+    paddingVertical: 13,
+    paddingHorizontal: 20
+  },
 });

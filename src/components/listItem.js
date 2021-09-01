@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, TouchableWithoutFeedback, StyleSheet, Text} from 'react-native';
+import {View, Pressable, StyleSheet, Text} from 'react-native';
 
 import Colors from '../global/colors';
 import icons from '../global/icons';
@@ -55,23 +55,20 @@ export default function ListItem(props) {
   };
 
   return (
-    <View style={styles.container}>
-      <TouchableWithoutFeedback onPress={props.onPress}>
-        <View style={styles.content}>
-          <Text style={styles.textTitle}>{item.title}</Text>
+    <Pressable onPress={props.onPress} style={styles.container}>
+      <View style={styles.content}>
+        <Text style={styles.textTitle}>{item.title}</Text>
+        {item.content !== '' && (
           <Text style={styles.textDescription}>{item.content}</Text>
-        </View>
-      </TouchableWithoutFeedback>
-
-      <TouchableWithoutFeedback onPress={() => console.log('edit date')}>
-        <View style={styles.dateBox}>
-          <Text style={styles.textDate}>{formatDate(dueDate)}</Text>
-          <Text style={[styles.textDate, {fontSize: 12}]}>
-            {formatTime(dueDate)}
-          </Text>
-        </View>
-      </TouchableWithoutFeedback>
-    </View>
+        )}
+      </View>
+      <View style={styles.dateBox}>
+        <Text style={styles.textDate}>{formatDate(dueDate)}</Text>
+        <Text style={[styles.textDate, {fontSize: 12}]}>
+          {formatTime(dueDate)}
+        </Text>
+      </View>
+    </Pressable>
   );
 }
 
@@ -88,8 +85,9 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 8,
     borderBottomLeftRadius: 8,
     flex: 1,
+    justifyContent: 'center',
   },
-  dateBox: {padding: 15, alignItems: 'center'},
+  dateBox: {padding: 15, alignItems: 'center', justifyContent: 'center'},
   textTitle: {color: Colors.textDefault, fontSize: 14, fontWeight: 'bold'},
   textDescription: {color: Colors.textDefault, fontSize: 12},
   textDate: {color: Colors.textDefault, fontSize: 14},

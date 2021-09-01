@@ -119,7 +119,7 @@ export default function TodoListScreen() {
       />
       <RoundButton
         title="Clear Storage"
-        color={Colors.removeRed}
+        color={Colors.cancelGrey}
         onPress={() => {
           listData.clear();
         }}
@@ -129,5 +129,9 @@ export default function TodoListScreen() {
 }
 
 const styles = StyleSheet.create({
-  contentText: {fontSize: 14, color: Colors.textDefault, marginBottom: 12},
+  contentText: {
+    fontSize: 14,
+    color: Colors.textDefault,
+    marginBottom: 12,
+  },
 });
