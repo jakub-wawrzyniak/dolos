@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {View, Text, StyleSheet, FlatList, Button} from 'react-native';
+import {View, Text, StyleSheet, FlatList, SectionList, Button} from 'react-native';
 
 import globalStyles from '../global/styles';
 import ListItem from '../components/listItem';
@@ -7,6 +7,50 @@ import Colors from '../global/colors';
 import {TodoListAddModal} from '../components/modals/todoList-newItemModal';
 import {todoListStorageHandler as listData} from '../utils/storageHandler';
 import RoundButton from '../components/roundButton';
+import Separator from '../components/separator';
+
+const sortTodoData = todos => {
+  // Sorts Todos by due date in an ascending way
+  const out = todos.sort((todo1, todo2) => {
+    let t1 = new Date(todo1.dueDateISO)
+    let t2 = new Date(todo2.dueDateISO)
+    return t1.getTime() - t2.getTime()
+  })
+  return out
+}
+
+const getNextDay = days => {
+  // Returns a timestamp of a day that is {days} away from now
+  const date = new Date()
+  date.setTime(date.getTime() + 1000*60*60*24*days)
+  date.setHours(0, 0, 0, 0)
+  return date.getTime()
+}
+
+const getSectionedTodoData = todos => {
+  // returns data prepared for the section={} parameter in SectionedList
+  const sortedTodos = sortTodoData(todos)
+  const sections = [
+    {data: [], title: "Overdue", endsBy: new Date().getTime()},
+    {data: [], title: "Today", endsBy: getNextDay(1)},
+    {data: [], title: "Tomorrow", endsBy: getNextDay(2)},
+    {data: [], title: "This week", endsBy: getNextDay(7)},
+    {data: [], title: "This month", endsBy: getNextDay(30)},
+    {data: [], title: "Later", endsBy: getNextDay(9999999999999)}, 
+    // Its terrible, can introduce a memory leak, but im tired, dont judge me :P
+  ]
+
+  sortedTodos.forEach(todo => {
+    const todoDueBy = new Date(todo.dueDateISO).getTime()
+    for (const section of sections) {
+      if (todoDueBy < section.endsBy) {
+        section.data.push(todo)
+        break
+      }
+    }
+  })
+  return sections
+}
 
 export default function TodoListScreen() {
   const [addModalVisible, setAddModalVisible] = useState(false);
@@ -51,22 +95,19 @@ export default function TodoListScreen() {
           item={itemForModal}
         />
       )}
-      <FlatList
-        data={data}
-        renderItem={({item}) => {
-          return (
-            <ListItem
+      <SectionList
+        sections={getSectionedTodoData(data)}
+        renderItem={({item}) => <ListItem
               onPress={() => {
                 setEditMode(true);
                 setItemForModal(item); // give it THE item to edit
                 setAddModalVisible(true);
               }}
-              // passing item itself didn't work - some pass by ref(?) issue?
               itemKey={item.key}>
               <Text style={styles.contentText}>{item.content}</Text>
-            </ListItem>
-          );
-        }}
+        </ListItem> }
+        renderSectionHeader={({ section: { title } }) => 
+          <Separator title={title}/> }
       />
       <RoundButton
         title="Add Item"
