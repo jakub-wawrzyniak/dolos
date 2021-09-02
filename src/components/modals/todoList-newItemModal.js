@@ -12,6 +12,11 @@ import Colors from '../../global/colors';
 import OnOffSwitch from '../onOffSwitch';
 import EditButtons from '../editButtons';
 import DatePicker from '../datePicker';
+import {
+  generateID,
+  turnNotifOff,
+  turnNotifOn,
+} from '../../utils/notificationHandler';
 
 export function TodoListAddModal({onAccept, onCancel, onRequestClose, item}) {
   const [isNotificationOn, setIsNotificationOn] = useState(
@@ -64,8 +69,19 @@ export function TodoListAddModal({onAccept, onCancel, onRequestClose, item}) {
             onCancel={() => onCancel()}
             onAccept={() => {
               //  pack and send data
+              //? there might be a better way to do it
               newItem.dueDateISO = date.toISOString();
-              newItem.notificationActive = isNotificationOn;
+              newItem.notificationData.dateISO = newItem.dueDateISO;
+              if (newItem.notificationData.id === '')
+                newItem.notificationData.id = generateID();
+              newItem.notificationData.message = newItem.content;
+              newItem.notificationData.title = newItem.title;
+              newItem.notificationData.origin = 'todoList';
+              if (isNotificationOn) {
+                turnNotifOn(newItem);
+              } else {
+                turnNotifOff(newItem);
+              }
               onAccept(newItem);
             }}
           />

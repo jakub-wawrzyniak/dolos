@@ -36,6 +36,14 @@ export function removeNotification(id) {
   PushNotification.cancelLocalNotifications({id: id});
 }
 
+export function logScheduled() {
+  PushNotification.getScheduledLocalNotifications(all => {
+    all.forEach(notif => {
+      console.log(notif);
+    });
+  });
+}
+
 export function editNotification(id, newNotificationData) {
   removeNotification(id);
   createNotification(newNotificationData);
@@ -90,7 +98,7 @@ export function turnNotifOff(item) {
   if (item.notificationActive) {
     // if id === "" it means that a notification has never been set.
     if (item.notificationData.id !== '') {
-      // if it's been set it means there is data saved and it's save to remove.
+      // if it's been set it means there is data saved and it's safe to remove.
       removeNotification(item.notificationData.id);
       item.notificationActive = false;
       console.log('TURNED OFF');
@@ -102,4 +110,29 @@ export function turnNotifOff(item) {
     console.log('Notification is already off.');
   }
   return false;
+}
+
+/** updates notification for given item  */
+export function updateNotification(item) {
+  if (
+    item.notificationData === undefined ||
+    item.notificationActive === undefined
+  ) {
+    console.warn(
+      "[updateNotification]: passed item doesn't have necessary props.",
+    );
+    return false;
+  }
+  if (item.notificationActive) {
+    if (new Date(item.notificationData.dateISO).getTime() < Date.now()) {
+      console.log('The chosen date is over. Notification will be turned off');
+      turnNotifOff(item);
+    } else {
+      editNotification(item.notificationData.id, item.notificationData);
+    }
+  }
+}
+
+export function clearAll() {
+  PushNotification.cancelAllLocalNotifications();
 }

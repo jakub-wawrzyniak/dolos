@@ -16,7 +16,7 @@ function TimePicker({date, setDate}) {
           value={date}
           onChange={(event, newDate) => {
             setIsPickerVisible(false); // * THIS HAS TO BE BEFORE setDate
-            newDate.setSeconds(0, 0); // so we set to only full minutes
+            if (newDate) newDate.setSeconds(0, 0);
             setDate(newDate || date); // so it doesn't crash on cancel
           }}
         />
