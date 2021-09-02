@@ -17,6 +17,7 @@ import RoundButton from '../components/roundButton';
 import Separator from '../components/separator';
 import * as notif from '../utils/notificationHandler';
 
+//#region - sorting stuff
 const sortTodoData = todos => {
   // Sorts Todos by due date in an ascending way
   const out = todos.sort((todo1, todo2) => {
@@ -59,6 +60,7 @@ const getSectionedTodoData = todos => {
   });
   return sections;
 };
+//#endregion
 
 export default function TodoListScreen() {
   const [addModalVisible, setAddModalVisible] = useState(false);
@@ -116,7 +118,8 @@ export default function TodoListScreen() {
               setItemForModal(item); // give it THE item to edit
               setAddModalVisible(true);
             }}
-            itemKey={item.key}>
+            itemKey={item.key}
+            onDeletePress={() => listData.removeItem(item.key)}>
             <Text style={styles.contentText}>{item.content}</Text>
           </ListItem>
         )}
@@ -137,6 +140,14 @@ export default function TodoListScreen() {
         color={Colors.cancelGrey}
         onPress={() => {
           listData.clear();
+        }}
+      />
+      <RoundButton
+        title="log notifications"
+        color={Colors.cancelGrey}
+        onPress={() => {
+          console.log('Scheduled notifications:');
+          notif.logScheduled();
         }}
       />
     </View>

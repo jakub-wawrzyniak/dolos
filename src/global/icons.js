@@ -20,5 +20,6 @@ const icons = {
   settings: (
     <Icon name="ellipsis-vertical" size={25} color={Colors.iconDefault} />
   ),
+  delete: <Icon name="trash-outline" size={25} color={Colors.iconDefault} />,
 };
 export default icons;

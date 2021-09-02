@@ -10,7 +10,7 @@
 // I heard that https://nozbe.github.io/WatermelonDB/index.html is pretty cool.
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {NotificationData} from './notificationHandler';
+import {NotificationData, removeNotification} from './notificationHandler';
 
 export default class StorageHandler {
   constructor(storageKey) {
@@ -84,7 +84,15 @@ class TodoListStorageHandler extends StorageHandler {
   }
 
   removeItem(itemKey) {
-    this.items = this.items.filter(item => item.key !== itemKey);
+    this.items = this.items.filter(item => {
+      if (item.key !== itemKey) {
+        return true;
+      } else {
+        // remove notification before removing item
+        removeNotification(item.notificationData.id);
+        return false;
+      }
+    });
     this.storeData();
   }
 
