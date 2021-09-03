@@ -11,7 +11,7 @@ import {
 import Colors from '../../global/colors';
 import globalStyles from '../../global/styles';
 import OnOffSwitch from '../onOffSwitch';
-import EditButtons from '../editButtons';
+import AcceptCancelButtons from '../acceptCancelButtons';
 import DatePicker from '../datePicker';
 import {
   generateID,
@@ -68,7 +68,7 @@ export function TodoListAddModal({onAccept, onCancel, onRequestClose, item}) {
             <Text style={styles.text}>send me a notification</Text>
           </View>
 
-          <EditButtons
+          <AcceptCancelButtons
             onCancel={() => onCancel()}
             onAccept={() => {
               //  pack and send data

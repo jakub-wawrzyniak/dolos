@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, Text, TouchableNativeFeedback, StyleSheet} from 'react-native';
+import {View, Text, Pressable, StyleSheet} from 'react-native';
 
 import globalStyles from '../global/styles';
 
@@ -11,13 +11,11 @@ export default function RoundButton({title, onPress, color, style}) {
         {overflow: 'hidden', backgroundColor: color},
         style,
       ]}>
-      <TouchableNativeFeedback
-        onPress={onPress}
-        background={TouchableNativeFeedback.Ripple('rgba(0,0,0,0.1)', true)}>
+      <Pressable onPress={onPress} android_ripple={{color: 'rgba(0,0,0,0.1)'}}>
         <View>
           <Text style={styles.text}>{title}</Text>
         </View>
-      </TouchableNativeFeedback>
+      </Pressable>
     </View>
   );
 }
@@ -28,6 +26,8 @@ const styles = StyleSheet.create({
     marginVertical: 5,
   },
   text: {
+    ...globalStyles.textDefault,
+    fontSize: 14,
     alignSelf: 'center',
     paddingVertical: 13,
     paddingHorizontal: 20,
