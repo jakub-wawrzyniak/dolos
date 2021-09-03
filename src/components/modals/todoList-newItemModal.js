@@ -9,6 +9,7 @@ import {
   Pressable,
 } from 'react-native';
 import Colors from '../../global/colors';
+import globalStyles from '../../global/styles';
 import OnOffSwitch from '../onOffSwitch';
 import EditButtons from '../editButtons';
 import DatePicker from '../datePicker';
@@ -34,7 +35,9 @@ export function TodoListAddModal({onAccept, onCancel, onRequestClose, item}) {
       animationType="fade"
       transparent={true}
       onRequestClose={onRequestClose}>
-      <Pressable style={styles.modalBg} onPress={() => Keyboard.dismiss()}>
+      <Pressable
+        style={globalStyles.modalBackgroundTransparent}
+        onPress={() => Keyboard.dismiss()}>
         <View style={styles.modalContainer}>
           <TextInput
             style={styles.inputBox}
@@ -106,15 +109,8 @@ const styles = StyleSheet.create({
     borderColor: Colors.textDefault,
     marginVertical: 12,
   },
-  modalBg: {
-    // opacity is inherited so this is how we make it independent
-    backgroundColor: 'rgba(225,225,225,0.5)',
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
   modalContainer: {
-    backgroundColor: 'white',
+    backgroundColor: Colors.backgroundDefault,
     width: '88%',
     paddingVertical: 25,
     paddingHorizontal: 35,

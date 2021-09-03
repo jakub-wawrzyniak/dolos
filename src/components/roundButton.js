@@ -1,6 +1,8 @@
 import React from 'react';
 import {View, Text, TouchableNativeFeedback, StyleSheet} from 'react-native';
 
+import globalStyles from '../global/styles';
+
 export default function RoundButton({title, onPress, color, style}) {
   return (
     <View

@@ -1,12 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  FlatList,
-  SectionList,
-  Button,
-} from 'react-native';
+import {View, SectionList} from 'react-native';
 
 import globalStyles from '../global/styles';
 import ListItem from '../components/listItem';
@@ -119,9 +112,7 @@ export default function TodoListScreen() {
               setAddModalVisible(true);
             }}
             itemKey={item.key}
-            onDeletePress={() => listData.removeItem(item.key)}>
-            <Text style={styles.contentText}>{item.content}</Text>
-          </ListItem>
+            onDeletePress={() => listData.removeItem(item.key)}></ListItem>
         )}
         renderSectionHeader={({section: {title}}) => (
           <Separator title={title} />
@@ -153,11 +144,3 @@ export default function TodoListScreen() {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  contentText: {
-    fontSize: 14,
-    color: Colors.textDefault,
-    marginBottom: 12,
-  },
-});

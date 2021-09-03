@@ -11,7 +11,7 @@ import {
 
 import icons from '../global/icons';
 import Colors from '../global/colors';
-import InputFieldModal from '../components/modals/inputFieldModal';
+import InputFieldModal from './inputFieldModal';
 import {todoListStorageHandler as listData} from '../utils/storageHandler';
 import {
   NotificationData,

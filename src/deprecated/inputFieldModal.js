@@ -8,11 +8,12 @@ import {
   Text,
   TextInput,
 } from 'react-native';
-import Colors from '../../global/colors';
+import Colors from '../global/colors';
 
-import icons from '../../global/icons';
-import IconButton from '../iconButton';
+import icons from '../global/icons';
+import IconButton from '../components/iconButton';
 
+/** @deprecated */
 export default function InputFieldModal({
   title,
   modalVisible,

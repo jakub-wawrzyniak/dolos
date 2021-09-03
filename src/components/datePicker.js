@@ -69,7 +69,6 @@ const style = StyleSheet.create({
     alignItems: 'center',
     marginVertical: 20,
   },
-
   textPicker: {
     fontSize: 16,
     fontWeight: 'bold',

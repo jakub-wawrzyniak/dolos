@@ -1,0 +1,5 @@
+@wojtek:
+Do not use these components/files. They are left here for reference 
+in case we wanted to come back and look at some code. 
+I don't know if it's a good idea to do this, I've never done it.
+Feel free to prove me wrong if you want.

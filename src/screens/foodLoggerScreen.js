@@ -1,11 +1,5 @@
 import React, {useState} from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  useWindowDimensions,
-  Button,
-} from 'react-native';
+import {View, Text, Button} from 'react-native';
 import ProgressCircle from '../components/progressCircle';
 
 import globalStyles from '../global/styles';

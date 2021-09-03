@@ -1,9 +1,11 @@
 import React from 'react';
 import {View, Pressable, StyleSheet, Text} from 'react-native';
 import Swipeable from 'react-native-gesture-handler/Swipeable';
+import Icon from 'react-native-vector-icons/Ionicons';
 
 import Colors from '../global/colors';
-import icons from '../global/icons';
+import * as icons from '../global/icons';
+import globalStyles from '../global/styles';
 import {todoListStorageHandler as listStorage} from '../utils/storageHandler';
 
 export default function ListItem(props) {
@@ -39,7 +41,13 @@ export default function ListItem(props) {
   const leftActions = () => {
     return (
       <Pressable onPress={props.onDeletePress}>
-        <View style={styles.leftActions}>{icons.delete}</View>
+        <View style={styles.leftActions}>
+          <Icon
+            name={icons.names.delete}
+            size={icons.sizes.default}
+            color={Colors.backgroundDefault}
+          />
+        </View>
       </Pressable>
     );
   };
@@ -48,14 +56,14 @@ export default function ListItem(props) {
     <Swipeable renderLeftActions={leftActions}>
       <Pressable onPress={props.onPress} style={styles.container}>
         <View style={styles.content}>
-          <Text style={styles.textTitle}>{item.title}</Text>
+          <Text style={globalStyles.textTitle}>{item.title}</Text>
           {item.content !== '' && (
-            <Text style={styles.textDescription}>{item.content}</Text>
+            <Text style={globalStyles.textDefault}>{item.content}</Text>
           )}
         </View>
         <View style={styles.dateBox}>
-          <Text style={styles.textDate}>{formatDate(dueDate)}</Text>
-          <Text style={[styles.textDate, {fontSize: 12}]}>
+          <Text style={styles.dateText}>{formatDate(dueDate)}</Text>
+          <Text style={[styles.dateText, {fontSize: 12}]}>
             {formatTime(dueDate)}
           </Text>
         </View>
@@ -80,6 +88,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   dateBox: {padding: 15, alignItems: 'center', justifyContent: 'center'},
+  dateText: {color: Colors.textDefault, fontSize: 14},
   // leftActions is closely related to cointainer to look consistent
   // maybe could implement it as an override, but I suppose this will change
   leftActions: {
@@ -92,7 +101,4 @@ const styles = StyleSheet.create({
     marginVertical: 8,
     marginHorizontal: 3,
   },
-  textTitle: {color: Colors.textDefault, fontSize: 14, fontWeight: 'bold'},
-  textDescription: {color: Colors.textDefault, fontSize: 12},
-  textDate: {color: Colors.textDefault, fontSize: 14},
 });
