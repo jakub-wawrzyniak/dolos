@@ -119,26 +119,11 @@ export default function TodoListScreen() {
         )}
       />
       <RoundButton
-        title="Add Item"
+        title="Add New"
         color={Colors.acceptGreen}
         onPress={() => {
           setAddModalVisible(true);
           setItemForModal(new listData.item()); // give it blank item
-        }}
-      />
-      <RoundButton
-        title="Clear Storage"
-        color={Colors.cancelGrey}
-        onPress={() => {
-          listData.clear();
-        }}
-      />
-      <RoundButton
-        title="log notifications"
-        color={Colors.cancelGrey}
-        onPress={() => {
-          console.log('Scheduled notifications:');
-          notif.logScheduled();
         }}
       />
     </View>

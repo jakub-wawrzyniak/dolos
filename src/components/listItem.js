@@ -32,8 +32,10 @@ export default function ListItem(props) {
     return `${months[date.getMonth()]} ${date.getDate()}`;
   };
   const formatTime = date => {
-    return `${date.getHours()}:${date.getMinutes()} ${
-      date.getHours() < 12 ? 'AM' : 'PM' // ! CHANGE dep. on time picker
+    const h = date.getHours();
+    const m = date.getMinutes();
+    return `${h < 10 ? '0' + h : h}:${m < 10 ? '0' + m : m} ${
+      h < 12 ? 'AM' : 'PM'
     }`;
   };
   //#endregion

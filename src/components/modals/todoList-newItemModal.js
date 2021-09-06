@@ -41,7 +41,7 @@ export function TodoListAddModal({onAccept, onCancel, onRequestClose, item}) {
         <View style={styles.modalContainer}>
           <TextInput
             style={styles.inputBox}
-            placeholder="Title - add"
+            placeholder="Title"
             defaultValue={newItem.title}
             onChangeText={text => {
               newItem.title = text;
