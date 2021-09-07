@@ -4,11 +4,11 @@ import {
   View,
   Keyboard,
   StyleSheet,
-  Text,
-  TextInput,
   Pressable,
+  TextInput,
 } from 'react-native';
 import Colors from '../../global/colors';
+import {P} from '../../global/text';
 import globalStyles from '../../global/styles';
 import OnOffSwitch from '../onOffSwitch';
 import AcceptCancelButtons from '../acceptCancelButtons';
@@ -65,7 +65,7 @@ export function TodoListAddModal({onAccept, onCancel, onRequestClose, item}) {
               isOn={isNotificationOn}
               setIsOn={setIsNotificationOn}
             />
-            <Text style={styles.text}>send me a notification</Text>
+            <P style={{paddingVertical: 12}}>send me a notification</P>
           </View>
 
           <AcceptCancelButtons
@@ -106,8 +106,9 @@ const styles = StyleSheet.create({
     padding: 0, // reset default padding
     // paddingHorizontal: 8, A suggestion, looks better to me
     borderBottomWidth: 1,
-    borderColor: Colors.textDefault,
+    borderColor: Colors.borderDefault,
     marginVertical: 12,
+    color: Colors.textDefault,
   },
   modalContainer: {
     backgroundColor: Colors.backgroundDefault,
@@ -115,10 +116,5 @@ const styles = StyleSheet.create({
     paddingVertical: 25,
     paddingHorizontal: 35,
     borderRadius: 20,
-  },
-  text: {
-    color: Colors.textDefault,
-    alignSelf: 'center',
-    paddingVertical: 12,
   },
 });
