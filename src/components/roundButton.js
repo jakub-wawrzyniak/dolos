@@ -1,7 +1,6 @@
 import React from 'react';
 import {View, Text, Pressable, StyleSheet} from 'react-native';
-
-import globalStyles from '../global/styles';
+import {P} from '../global/text';
 
 export default function RoundButton({title, onPress, color, style}) {
   return (
@@ -13,7 +12,7 @@ export default function RoundButton({title, onPress, color, style}) {
       ]}>
       <Pressable onPress={onPress} android_ripple={{color: 'rgba(0,0,0,0.1)'}}>
         <View>
-          <Text style={styles.text}>{title}</Text>
+          <P style={styles.text}>{title}</P>
         </View>
       </Pressable>
     </View>
@@ -26,8 +25,6 @@ const styles = StyleSheet.create({
     marginVertical: 5,
   },
   text: {
-    ...globalStyles.textDefault,
-    fontSize: 14,
     alignSelf: 'center',
     paddingVertical: 13,
     paddingHorizontal: 20,

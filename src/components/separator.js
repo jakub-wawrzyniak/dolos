@@ -1,6 +1,7 @@
 import React from 'react';
 import colors from '../global/colors';
-import {StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, View} from 'react-native';
+import {H3, H4} from '../global/text';
 
 function Line({flex}) {
   return <View style={[style.line, {flex: flex}]} />;
@@ -10,7 +11,7 @@ export default function Separator({title}) {
   return (
     <View style={style.view}>
       <Line flex={1} />
-      <Text style={style.text}>{title}</Text>
+      <H3 style={style.text}>{title}</H3>
       <Line flex={5} />
     </View>
   );
@@ -19,7 +20,6 @@ export default function Separator({title}) {
 const style = StyleSheet.create({
   text: {
     marginHorizontal: 15,
-    fontSize: 15,
   },
   line: {
     height: 1,

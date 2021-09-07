@@ -1,4 +1,5 @@
-import {Pressable, Text, StyleSheet} from 'react-native';
+import {Pressable, StyleSheet} from 'react-native';
+import {P} from '../global/text';
 import React from 'react';
 import Colors from '../global/colors';
 
@@ -6,8 +7,8 @@ export default function OnOffSwitch({onTitle, offTitle, isOn, setIsOn}) {
   const toggle = () => setIsOn(isOn => !isOn);
   return (
     <Pressable onPress={toggle} style={style.pressable}>
-      <Text style={[style.text, isOn && style.selected]}>{onTitle}</Text>
-      <Text style={[style.text, !isOn && style.selected]}>{offTitle}</Text>
+      <P style={[style.text, isOn && style.selected]}>{onTitle}</P>
+      <P style={[style.text, !isOn && style.selected]}>{offTitle}</P>
     </Pressable>
   );
 }

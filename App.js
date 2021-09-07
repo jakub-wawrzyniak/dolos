@@ -9,15 +9,28 @@ import HabitTrackerScreen from './src/screens/habitTrackerScreen';
 import Colors from './src/global/colors';
 
 const Drawer = createDrawerNavigator();
+const theme = {
+  dark: Colors.isDark,
+  colors: {
+    primary: Colors.textDefault,
+    background: Colors.backgroundDefault,
+    card: Colors.backgroundDefault,
+    text: Colors.textDefault,
+    border: Colors.borderDefault,
+    notification: Colors.foregroundGrey,
+  },
+};
 
 export default function App() {
   return (
-    <NavigationContainer>
+    <NavigationContainer theme={theme}>
       <Drawer.Navigator
         initialRouteName="Home"
         screenOptions={{
           headerTintColor: Colors.textDefault,
-          headerStyle: {elevation: 0},
+          headerStyle: {
+            elevation: 0,
+          },
           headerTitleAlign: 'center',
         }}>
         <Drawer.Screen name="Home" component={HomeScreen} />

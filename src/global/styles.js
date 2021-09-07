@@ -13,7 +13,7 @@ const styles = StyleSheet.create({
   textTitle: {color: Colors.textDefault, fontSize: 14, fontWeight: 'bold'},
   modalBackgroundTransparent: {
     // opacity is inherited so this is how we make it independent
-    backgroundColor: 'rgba(225,225,225,0.5)',
+    backgroundColor: Colors.backgroundColorModal,
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',

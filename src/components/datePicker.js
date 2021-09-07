@@ -1,7 +1,8 @@
 import React, {Fragment, useState} from 'react';
-import {Text, Pressable, View, StyleSheet} from 'react-native';
+import {Pressable, View, StyleSheet} from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
-
+import {formatDate, formatTime} from '../utils/dateFormatter';
+import {P, Strong} from '../global/text';
 // ! if dialog box were to open twice: https://github.com/react-native-datetimepicker/datetimepicker/issues/54#issuecomment-552951685
 
 function TimePicker({date, setDate}) {
@@ -22,7 +23,7 @@ function TimePicker({date, setDate}) {
         />
       )}
       <Pressable onPress={() => setIsPickerVisible(true)}>
-        <Text style={style.textPicker}>{date.toString().slice(16, 21)}</Text>
+        <Strong style={style.textPicker}>{formatTime(date)}</Strong>
       </Pressable>
     </Fragment>
   );
@@ -45,7 +46,7 @@ function DayPicker({date, setDate}) {
         />
       )}
       <Pressable onPress={() => setIsPickerVisible(true)}>
-        <Text style={style.textPicker}>{date.toString().slice(4, 10)}</Text>
+        <Strong style={style.textPicker}>{formatDate(date)}</Strong>
       </Pressable>
     </Fragment>
   );
@@ -54,9 +55,9 @@ function DayPicker({date, setDate}) {
 export default function DatePicker({date, setDate}) {
   return (
     <View style={style.view}>
-      <Text>Due by</Text>
+      <P>Due by</P>
       <DayPicker date={date} setDate={setDate} />
-      <Text>at</Text>
+      <P>at</P>
       <TimePicker date={date} setDate={setDate} />
     </View>
   );
@@ -68,9 +69,5 @@ const style = StyleSheet.create({
     justifyContent: 'space-around',
     alignItems: 'center',
     marginVertical: 20,
-  },
-  textPicker: {
-    fontSize: 16,
-    fontWeight: 'bold',
   },
 });
