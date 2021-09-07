@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {View, SectionList} from 'react-native';
 
 import globalStyles from '../global/styles';
-import ListItem from '../components/listItem';
+import ListItem from '../components/todoListItem';
 import Colors from '../global/colors';
 import {TodoListAddModal} from '../components/modals/todoList-newItemModal';
 import {todoListStorageHandler as listData} from '../utils/storageHandler';
@@ -11,8 +11,8 @@ import Separator from '../components/separator';
 import * as notif from '../utils/notificationHandler';
 
 //#region - sorting stuff
+/** Sorts Todos by due date in an ascending way */
 const sortTodoData = todos => {
-  // Sorts Todos by due date in an ascending way
   const out = todos.sort((todo1, todo2) => {
     let t1 = new Date(todo1.dueDateISO);
     let t2 = new Date(todo2.dueDateISO);
@@ -21,16 +21,16 @@ const sortTodoData = todos => {
   return out;
 };
 
+/** Returns a timestamp of a day that is {days} away from now */
 const getNextDay = days => {
-  // Returns a timestamp of a day that is {days} away from now
   const date = new Date();
   date.setTime(date.getTime() + 1000 * 60 * 60 * 24 * days);
   date.setHours(0, 0, 0, 0);
   return date.getTime();
 };
 
+/**  returns data prepared for the section={} parameter in SectionedList */
 const getSectionedTodoData = todos => {
-  // returns data prepared for the section={} parameter in SectionedList
   const sortedTodos = sortTodoData(todos);
   const sections = [
     {data: [], title: 'Overdue', endsBy: new Date().getTime()},

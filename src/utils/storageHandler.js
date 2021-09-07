@@ -12,6 +12,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {NotificationData, removeNotification} from './notificationHandler';
 
+/** base storage handler class for interacting with async storage */
 export default class StorageHandler {
   constructor(storageKey) {
     this.storageKey = storageKey;
@@ -20,12 +21,14 @@ export default class StorageHandler {
     this.initData();
   }
 
+  /** call this to load data from storage to memory */
   initData() {
     this.getData().then(data => {
       this.items = data;
     });
   }
 
+  /** write to async storage */
   async storeData() {
     try {
       const jsonValue = JSON.stringify(this.items);
@@ -37,6 +40,7 @@ export default class StorageHandler {
     }
   }
 
+  /** read from async storage */
   async getData() {
     try {
       const jsonValue = await AsyncStorage.getItem(this.storageKey);
@@ -46,11 +50,14 @@ export default class StorageHandler {
     }
   }
 
+  /** clear mamory data and storage (write empty to storage) */
   clear() {
     this.items = [];
     this.storeData();
   }
 
+  //! MAY NEED TO REWORK THE EVENT SYSTEM. I'D LIKE TO DO IT WHEN NEEDED @wojtek
+  /** calls all subscribed listener functions */
   #storageUpdated() {
     // something of an event system - C#-like pattern.
     // ad listener in useEffect (componentdidmount), and remove it later
@@ -63,10 +70,9 @@ export default class StorageHandler {
   }
 }
 
-// I'd imagine we'll have similar classes for all features.
 class TodoListStorageHandler extends StorageHandler {
-  constructor() {
-    super('todoList');
+  constructor(storageKey) {
+    super(storageKey);
     this.item = class Item {
       key = '';
       title = '';
@@ -107,4 +113,46 @@ class TodoListStorageHandler extends StorageHandler {
     this.storeData();
   }
 }
+
+class HabitTrackerStorageHandler extends StorageHandler {
+  constructor(storageKey) {
+    super(storageKey);
+    this.item = class Item {
+      key = '';
+      content = '';
+    };
+  }
+
+  addItem(newItem) {
+    newItem.key = !!this.items[0] ? this.items[0].key + 1 : 1;
+    this.items = [newItem, ...this.items];
+    this.storeData();
+  }
+
+  removeItem(itemKey) {
+    this.items = this.items.filter(item => {
+      if (item.key !== itemKey) {
+        return true;
+      } else {
+        return false;
+      }
+    });
+    this.storeData();
+  }
+
+  /** replaces item with given key with newItem */
+  editItem(newItem) {
+    this.items = this.items.map(item => {
+      if (item.key === newItem.key) {
+        return newItem;
+      }
+      return item;
+    });
+    this.storeData();
+  }
+}
+
 export const todoListStorageHandler = new TodoListStorageHandler('todoList');
+export const habitTrackerStorageHandler = new HabitTrackerStorageHandler(
+  'habitTracker',
+);

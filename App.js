@@ -3,9 +3,8 @@ import {NavigationContainer} from '@react-navigation/native';
 import {createDrawerNavigator} from '@react-navigation/drawer';
 
 import HomeScreen from './src/screens/homeScreen';
-import FoodLoggerScreen from './src/screens/foodLoggerScreen';
-import FinanceTrackerScreen from './src/screens/financeTrackerScreen';
 import TodoListScreen from './src/screens/todoList-mainScreen';
+import HabitTrackerScreen from './src/screens/habitTrackerScreen';
 
 import Colors from './src/global/colors';
 
@@ -22,12 +21,8 @@ export default function App() {
           headerTitleAlign: 'center',
         }}>
         <Drawer.Screen name="Home" component={HomeScreen} />
-        <Drawer.Screen name="Food Logger" component={FoodLoggerScreen} />
-        <Drawer.Screen
-          name="Finance Tracker"
-          component={FinanceTrackerScreen}
-        />
         <Drawer.Screen name="ToDo List" component={TodoListScreen} />
+        <Drawer.Screen name="Habit Tracker" component={HabitTrackerScreen} />
       </Drawer.Navigator>
     </NavigationContainer>
   );
