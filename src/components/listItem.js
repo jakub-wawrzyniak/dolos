@@ -2,45 +2,18 @@ import React from 'react';
 import {View, Pressable, StyleSheet, Text} from 'react-native';
 import Swipeable from 'react-native-gesture-handler/Swipeable';
 import Icon from 'react-native-vector-icons/Ionicons';
-
+import { formatDate, formatTime } from '../utils/dateFormatter';
 import Colors from '../global/colors';
 import * as icons from '../global/icons';
 import globalStyles from '../global/styles';
 import {todoListStorageHandler as listStorage} from '../utils/storageHandler';
 
-export default function ListItem(props) {
-  const item = listStorage.items.find(item => item.key === props.itemKey);
+export default function ListItem({itemKey, onDeletePress, onPress}) {
+  const item = listStorage.items.find(item => item.key === itemKey);
   const dueDate = new Date(item.dueDateISO);
-
-  //#region Date formatting
-  // customs since Date obj doesn't satisfy me here ;(
-  const formatDate = date => {
-    const months = [
-      'Jan',
-      'Feb',
-      'Mar',
-      'Apr',
-      'May',
-      'Jun',
-      'Jul',
-      'Aug',
-      'Sep',
-      'Oct',
-      'Nov',
-      'Dec',
-    ];
-    return `${months[date.getMonth()]} ${date.getDate()}`;
-  };
-  const formatTime = date => {
-    return `${date.getHours()}:${date.getMinutes()} ${
-      date.getHours() < 12 ? 'AM' : 'PM' // ! CHANGE dep. on time picker
-    }`;
-  };
-  //#endregion
-
   const leftActions = () => {
     return (
-      <Pressable onPress={props.onDeletePress}>
+      <Pressable onPress={onDeletePress}>
         <View style={styles.leftActions}>
           <Icon
             name={icons.names.delete}
@@ -54,7 +27,7 @@ export default function ListItem(props) {
 
   return (
     <Swipeable renderLeftActions={leftActions}>
-      <Pressable onPress={props.onPress} style={styles.container}>
+      <Pressable onPress={onPress} style={styles.container}>
         <View style={styles.content}>
           <Text style={globalStyles.textTitle}>{item.title}</Text>
           {item.content !== '' && (
