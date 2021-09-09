@@ -5,6 +5,7 @@ import globalStyles from '../global/styles';
 import Colors from '../global/colors';
 import RoundButton from '../components/roundButton';
 import {habitTrackerStorageManager as habitData} from '../utils/storageHandler';
+import {Swipeable} from 'react-native-gesture-handler';
 
 /* ALGORITHM EXPLANATION
   * pseudocode
@@ -47,7 +48,7 @@ const spawnSets = then => {
   while (daysBetween(then, now) > 0) {
     then.setDate(then.getDate() + 1);
     habitData.set.items.forEach(itemTemplate => {
-      const item = new habitData.item(itemTemplate, then.toISOString());
+      const item = new habitData.item(itemTemplate.content, then.toISOString());
       isToday(then)
         ? habitData.current.addItem(item)
         : habitData.overdue.addItem(item);
@@ -142,15 +143,50 @@ export default function HabitTrackerScreen() {
     return sections;
   }
 
+  const temp_leftActions = () => (
+    <View style={{flex: 1}}>
+      <Text>Swipe to mark as COMPLETED</Text>
+    </View>
+  );
+  const temp_rightActions = () => (
+    <View style={{flex: 1}}>
+      <Text style={{alignSelf: 'flex-end'}}>Swipe to mark as FAILED</Text>
+    </View>
+  );
+
+  const onLeftOpen = item => {
+    console.log('COMPLETED');
+    item.completed = true;
+    const key = item.key;
+    habitData.archive.addItem(item);
+    habitData.overdue.removeItem(key);
+    habitData.current.removeItem(key);
+  };
+  const onRightOpen = item => {
+    console.log('FAILED');
+    item.completed = false;
+    const key = item.key;
+    habitData.archive.addItem(item);
+    habitData.overdue.removeItem(key);
+    habitData.current.removeItem(key);
+  };
+
   return (
     <View style={globalStyles.container}>
       <SectionList
         sections={getSectionedData()}
         renderItem={({item}) => {
           return (
-            <View>
-              <Text>{new Date(item.dateISO).toLocaleString()}</Text>
-            </View>
+            // temporary - implement proper UI
+            <Swipeable
+              renderLeftActions={temp_leftActions}
+              renderRightActions={temp_rightActions}
+              onSwipeableLeftOpen={() => onLeftOpen(item)}
+              onSwipeableRightOpen={() => onRightOpen(item)}>
+              <View style={{padding: 10, backgroundColor: 'pink'}}>
+                <Text>{new Date(item.dateISO).toLocaleString()}</Text>
+              </View>
+            </Swipeable>
           );
         }}
         renderSectionHeader={({section}) => {

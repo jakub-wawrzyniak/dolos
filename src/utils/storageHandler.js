@@ -120,7 +120,10 @@ class HabitTrackerStorageHandler extends StorageHandler {
   }
 
   addItem(newItem) {
-    newItem.key = !!this.items[0] ? this.items[0].key + 1 : 1;
+    newItem.key = !!this.items[0]
+      ? Number(this.items[0].key.charAt(0)) + 1 + this.storageKey
+      : 1 + this.storageKey;
+
     this.items = [newItem, ...this.items];
     this.storeData();
   }
@@ -164,12 +167,14 @@ export const habitTrackerStorageManager = {
       this.content = content;
       /** creation date */
       this.dateISO = date;
+      this.completed = false;
     }
   },
   /** to be used when populating list set */
   itemTemplate: class ItemTemplate {
     constructor(content) {
       this.content = content;
+      this.key = '';
     }
   },
   set: new HabitTrackerStorageHandler('habit_set'),
