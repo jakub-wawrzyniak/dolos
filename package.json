@@ -19,7 +19,7 @@
     "@react-navigation/native": "^6.0.0",
     "@react-navigation/stack": "^6.0.0",
     "react": "17.0.1",
-    "react-native": "0.64.2",
+    "react-native": "^0.64.2",
     "react-native-gesture-handler": "^1.10.3",
     "react-native-push-notification": "^7.4.0",
     "react-native-reanimated": "^2.2.0",

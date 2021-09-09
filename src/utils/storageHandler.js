@@ -117,10 +117,6 @@ class TodoListStorageHandler extends StorageHandler {
 class HabitTrackerStorageHandler extends StorageHandler {
   constructor(storageKey) {
     super(storageKey);
-    this.item = class Item {
-      key = '';
-      content = '';
-    };
   }
 
   addItem(newItem) {
@@ -152,7 +148,32 @@ class HabitTrackerStorageHandler extends StorageHandler {
   }
 }
 
+// I might actually have an idea for another storage handler redesign, but
+// for now it's okay, we'll se in the future. Plus we might need to integrate
+// a database anyway so we'll see - @wojtek
+
 export const todoListStorageHandler = new TodoListStorageHandler('todoList');
-export const habitTrackerStorageHandler = new HabitTrackerStorageHandler(
-  'habitTracker',
-);
+// I need a way to store 4 separate lists with all functionality.
+// and this way I don't need to rewrite the storage handler
+// just 4 handlers for habit tracker, each handles it's one list.
+export const habitTrackerStorageManager = {
+  /** to be used when populating lists other than set */
+  item: class Item {
+    constructor(content, date = new Date().toISOString()) {
+      this.key = '';
+      this.content = content;
+      /** creation date */
+      this.dateISO = date;
+    }
+  },
+  /** to be used when populating list set */
+  itemTemplate: class ItemTemplate {
+    constructor(content) {
+      this.content = content;
+    }
+  },
+  set: new HabitTrackerStorageHandler('habit_set'),
+  current: new HabitTrackerStorageHandler('habit_current'),
+  overdue: new HabitTrackerStorageHandler('habit_overdue'),
+  archive: new HabitTrackerStorageHandler('habit_archive'),
+};

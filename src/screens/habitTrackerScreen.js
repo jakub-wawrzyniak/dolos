@@ -1,63 +1,155 @@
 import React, {useEffect, useState} from 'react';
-import {View, Text, SectionList} from 'react-native';
+import {View, Text, SectionList, AppState} from 'react-native';
 
 import globalStyles from '../global/styles';
 import Colors from '../global/colors';
 import RoundButton from '../components/roundButton';
-import ListItem from '../components/habitListItem';
-import {habitTrackerStorageHandler as listData} from '../utils/storageHandler';
+import {habitTrackerStorageManager as habitData} from '../utils/storageHandler';
+
+/* ALGORITHM EXPLANATION
+  * pseudocode
+  app opens (or comes to an active state), checks if there are items in current
+    if yes: check their date
+      if today: nothing
+      if not today: move to overdue, spawn sets
+    if no: 
+      poll the latest entry in archive, check its date
+        if today: nothing
+        if not today: spawn sets
+  
+  * spawning sets: 
+  looks how many days passed since last updated, spawns sets into overdue
+  for every day that has passed and spawns a single set into current for today.
+
+  * archive: 
+  just a list of items in order they were swiped, newest on top. 
+  then if we want to construct the table we need a pass over the whole archive?
+  and a table looks something like this: 
+  day 1: habit1 yes habit2 no  habit3 non-existant-at-time
+  day 2: habit1 yes habit2 yes habit3 yes
+  day 3: habit1 no  habit2 yes habit3 yes
+
+  * note
+  habitData.set stores itemtemplates instead of items, they are strings of
+  content that are being put to items. Why not items? cuz pass by ref. issues. 
+*/
+
+//#region HELPER FUNCTIONS
+const isToday = date => {
+  return date.getDate() === new Date().getDate();
+};
+const daysBetween = (date1, date2) => {
+  return Math.abs(date1.getDate() - date2.getDate());
+};
+/** spawn a fresh set for each day between and today */
+const spawnSets = then => {
+  const now = new Date();
+  while (daysBetween(then, now) > 0) {
+    then.setDate(then.getDate() + 1);
+    habitData.set.items.forEach(itemTemplate => {
+      const item = new habitData.item(itemTemplate, then.toISOString());
+      isToday(then)
+        ? habitData.current.addItem(item)
+        : habitData.overdue.addItem(item);
+    });
+  }
+};
+//#endregion
 
 export default function HabitTrackerScreen() {
-  const [items, setItems] = useState([]);
+  // I have not done much testing with archive but it should work
+  function initData() {
+    habitData.current.getData().then(data => {
+      if (data.length === 0) {
+        //check if there are items in archive (if no it's ok - no action)
+        if (habitData.archive.items.length !== 0) {
+          // check the date of last in archive
+          const latestInArchive = new Date(habitData.archive.items[0].dateISO);
+          if (!isToday(latestInArchive)) {
+            spawnSets(latestInArchive);
+            setCurrentItems(habitData.current.items);
+          } else {
+            // everything is fine, just load
+            setCurrentItems(data);
+          }
+        }
+      } else {
+        // if first in current is out of date, all are.
+        if (!isToday(new Date(data[0].dateISO))) {
+          // move all from current to overdue
+          habitData.current.items.forEach(item => {
+            habitData.overdue.addItem(item);
+            habitData.current.removeItem(item.key);
+          });
+          // spawn a set for each day in between and today
+          spawnSets(new Date(data[0].dateISO));
+        } else {
+          //everything is fine, just load it
+          setCurrentItems(data);
+        }
+      }
+      // load overdue only after this logic, as data needs to be moved eariler.
+      habitData.overdue.getData().then(data => setOverdueItems(data));
+    });
+  }
+
+  function AppStateChangeHandler(newState) {
+    if (newState === 'active') {
+      initData();
+    }
+  }
+
+  const [currentItems, setCurrentItems] = useState([]);
+  const [overdueItems, setOverdueItems] = useState([]);
 
   useEffect(() => {
-    listData.onStorageUpdated.push(onStorageUpdated);
-    listData.getData().then(data => setItems(data));
+    // load data & perform data logic
+    initData();
+
+    // register events
+    habitData.current.onStorageUpdated.push(onStorageUpdated_current);
+    habitData.overdue.onStorageUpdated.push(onStorageUpdated_overdue);
+    AppState.addEventListener('change', AppStateChangeHandler);
+
     return () => {
-      listData.onStorageUpdated.splice(
-        listData.onStorageUpdated.indexOf(onStorageUpdated),
+      // unregister events
+      habitData.current.onStorageUpdated.splice(
+        habitData.current.onStorageUpdated.indexOf(onStorageUpdated_current),
         1,
       );
+      habitData.overdue.onStorageUpdated.splice(
+        habitData.overdue.onStorageUpdated.indexOf(onStorageUpdated_overdue),
+        1,
+      );
+      // ! when we upgrade from react native 0.64 to 0.65 we have to change this
+      // https://reactnative.dev/docs/appstate#removeeventlistener
+      AppState.removeEventListener('change', AppStateChangeHandler);
     };
   }, []);
 
-  function onStorageUpdated() {
-    listData.getData().then(newData => setItems(newData));
+  function onStorageUpdated_current() {
+    habitData.current.getData().then(newData => setCurrentItems(newData));
+  }
+  function onStorageUpdated_overdue() {
+    habitData.overdue.getData().then(newData => setOverdueItems(newData));
   }
 
-  function getSectionedData(items) {
+  function getSectionedData() {
     const sections = [
-      {title: 'overdue', data: items},
-      {title: 'today', data: items},
+      {title: 'overdue', data: overdueItems},
+      {title: 'today', data: currentItems},
     ];
     return sections;
   }
-  //   const template = [
-  //     {
-  //       title: 'overdue',
-  //       data: [
-  //         {content: 'Habit #1', key: 1},
-  //         {content: 'Habit #2', key: 2},
-  //       ],
-  //     },
-  //     {
-  //       title: 'today',
-  //       data: [
-  //         {content: 'Habit #1', key: 1},
-  //         {content: 'Habit #2', key: 2},
-  //         {content: 'Habit #3', key: 3},
-  //       ],
-  //     },
-  //   ];
 
   return (
     <View style={globalStyles.container}>
       <SectionList
-        sections={getSectionedData(items)}
+        sections={getSectionedData()}
         renderItem={({item}) => {
           return (
             <View>
-              <Text>{item.content + '   item'}</Text>
+              <Text>{new Date(item.dateISO).toLocaleString()}</Text>
             </View>
           );
         }}
@@ -73,22 +165,32 @@ export default function HabitTrackerScreen() {
         title="Add Item"
         color={Colors.acceptGreen}
         onPress={() => {
-          listData.addItem(new listData.item());
+          const itemTemplate = new habitData.itemTemplate('temporary habit');
+          habitData.set.addItem(itemTemplate);
+          habitData.current.addItem(new habitData.item(itemTemplate.content));
         }}
       />
       <RoundButton
         title="log storage"
         color={Colors.cancelGrey}
         onPress={() => {
-          console.log('STORAGE CONTENT:');
-          listData.items.forEach(item => console.log(item));
+          console.log();
+          for (const prop in habitData) {
+            if (prop == 'item' || prop === 'itemTemplate') continue;
+            console.log(prop);
+            console.log(habitData[prop].items);
+            console.log();
+          }
         }}
       />
       <RoundButton
-        title="clear storage"
+        title="clear all storage"
         color={Colors.removeRed}
         onPress={() => {
-          listData.clear();
+          for (const prop in habitData) {
+            if (prop === 'item' || prop === 'itemTemplate') continue;
+            habitData[prop].clear();
+          }
         }}
       />
       <RoundButton
