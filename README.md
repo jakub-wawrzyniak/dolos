@@ -17,11 +17,16 @@ The way I see this we have 3 options:
 3. Delete entries after 1-3 months and use 2 or load whole thing - the question is, do we need entries 1 year back? well we might...
 
 We have to ask a question what do we need to load archive for?
+
 Surely for drawing statistics to user (table), but it is also needed in the algorithm that refreshes habits and loads new if needed, which runs relatively frequently, so waiting 2sec every time to load archive is not an option, not to mention RAM usage.
+
 To avoid this we could implement some workaround in the storage handler that allows the algorithm to use only the latest portion of the archive (say week, or last 5 entries, or heck, the last 1 even, if last is selected correctly) and then this issue seems solved. now that we have the "on entry" data handling algorithm out of the way, we have to think about the table for statistics.
+
 Asuming we store the whole history (no deleting records after a year) we could ask for what period of time they want statistics and load only data for that said period (i.e. month, 3 months, a week) but this requires us to store the archive in multiple lists, which almost grows to be a database, so I imagine it would be easier to use one maybe(?)
 But then still, what if the user asks for data for say 2 years back, we have to load 2 years worth of data. When designing this system keep in mind that if some habit was being tracked for only a day we don't want to include a whole row that lasts 2 years and has bits set to true for 7 days over this 2yr period, so that adds to the complexity. And then, even if we have some habits tracked for 2 years, and users wants to load this, what's the guarantee that they have enough emmory on their mobile phone to load that data for processings, so we have to do it in chunks (this is getting scary).
+
 This is the type of problem that cannot be "overlooked" by saying - noone's gonna use the app for 1 yr - because what if they will? we cannot afford that, this has to be done well right away.
+
 My idea would be to start seriously thinking about a database, but for now don't implement it, and do something like this:
 Store data in monthly(?) chunks, and delete records after said period - period which user can customize while being presented with a disclaimer that it is not advised to keep records older than X for memory reasons(but still allow it), and implement stuff in a way that even if they do keep 5years-worth of records we can somewhat resonably process this data, so maybe something where we show a table for 1 month, and when user clicks on an arrow to see 2nd month we only then load the 2nd month (while unloading the first to avoid RAM cluttering) and present it to them. Loose thinking, we have to discuss this.
 
