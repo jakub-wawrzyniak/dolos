@@ -40,7 +40,12 @@ const isToday = date => {
   return date.getDate() === new Date().getDate();
 };
 const daysBetween = (date1, date2) => {
-  return Math.abs(date1.getDate() - date2.getDate());
+  // return Math.abs(date1.getDate() - date2.getDate());
+  date1.setHours(0, 0, 0, 0);
+  date2.setHours(0, 0, 0, 0);
+  return Math.abs(
+    Math.ceil((date1.getTime() - date2.getTime()) / (1000 * 3600 * 24)),
+  );
 };
 /** spawn a fresh set for each day between and today */
 const spawnSets = then => {
@@ -155,18 +160,16 @@ export default function HabitTrackerScreen() {
   );
 
   const onLeftOpen = item => {
-    console.log('COMPLETED');
     item.completed = true;
     const key = item.key;
-    habitData.archive.addItem(item);
+    habitData.archive.insertItem(item);
     habitData.overdue.removeItem(key);
     habitData.current.removeItem(key);
   };
   const onRightOpen = item => {
-    console.log('FAILED');
     item.completed = false;
     const key = item.key;
-    habitData.archive.addItem(item);
+    habitData.archive.insertItem(item);
     habitData.overdue.removeItem(key);
     habitData.current.removeItem(key);
   };

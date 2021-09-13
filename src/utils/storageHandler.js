@@ -120,11 +120,34 @@ class HabitTrackerStorageHandler extends StorageHandler {
   }
 
   addItem(newItem) {
-    newItem.key = !!this.items[0]
-      ? Number(this.items[0].key.charAt(0)) + 1 + this.storageKey
-      : 1 + this.storageKey;
-
+    if (this.storageKey === 'habit_archive') {
+      console.warn('addItem call on archive. Make sure you use insertItem.');
+      this.insertItem(newItem);
+      return;
+    }
+    // newItem.key = !!this.items[0]
+    //   ? Number(this.items[0].key.charAt(0)) + 1 + this.storageKey
+    //   : 1 + this.storageKey;
+    newItem.key = (((Math.random() * 4294967296) / 2 - 1) >>> 0).toString();
     this.items = [newItem, ...this.items];
+    this.storeData();
+  }
+
+  /** This method is ment for archive, where entries must be sorted */
+  insertItem(newItem) {
+    newItem.key = (((Math.random() * 4294967296) / 2 - 1) >>> 0).toString();
+
+    let index = 0;
+    if (this.items.length > 0) {
+      const incoming = new Date(newItem.dateISO);
+      while (index < this.items.length) {
+        if (incoming.getTime() >= new Date(this.items[index].dateISO).getTime())
+          break;
+        if (incoming.getTime() < new Date(this.items[index].dateISO).getTime())
+          index++;
+      }
+    }
+    this.items.splice(index, 0, newItem);
     this.storeData();
   }
 
@@ -154,6 +177,7 @@ class HabitTrackerStorageHandler extends StorageHandler {
 // I might actually have an idea for another storage handler redesign, but
 // for now it's okay, we'll se in the future. Plus we might need to integrate
 // a database anyway so we'll see - @wojtek
+// *** jokes on me I forgot what it was x d ***
 
 export const todoListStorageHandler = new TodoListStorageHandler('todoList');
 // I need a way to store 4 separate lists with all functionality.
