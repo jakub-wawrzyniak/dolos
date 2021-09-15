@@ -4,8 +4,8 @@
 // see foodloggerscreen
 
 import {StyleSheet} from 'react-native';
-
 export const ICONS = {
+  // todo input icons, look in icons.js for names of nice icons I chose. @wojtek
   ARROW_DOWN: null,
   ARROW_UP: null,
   TICK: null,

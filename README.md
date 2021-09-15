@@ -4,6 +4,14 @@ A Management app built with React Native.
 
 # problems, hiccups and unfinished business.
 
+1. Dropdown list doesn't work correctly on modals. If the modal is really small (i.e. smaller than the dropdown) the dropdown comes out of the modal WHICH IS DESIREABLE but WE CANNOT INTERACT with the part that sticks outise of the modal, at least in the case of the modal we use for adding items. For now I implemente the modal to be exactly as big as it has to be to make sure the dropdown never comes out of it, but it look rather bad. There are 2 fixes that come to my mind:
+
+- have this height prop in the style of view which makes empty space (see foodLogger-newItemModal.js) to be a state and update it dynamically to be 200 when we open the dropdown (but resizing modal? idk man...)
+- Ditch the modal and use an "ADD SCREEN" but this breaks consistency.
+  Some more testing should be done as to what causes the effect. Also, I would like not to change to package that is use for the dropdown. Basically this is a design problem that needs to be addressed.
+
+# archive & storage discussion
+
 we might want to test the performance of async storage with really long list of archive, I mean like 4 habits/day for 2 years which gives us 4*365*2 = 2920 so say 5000 entries in archive list, all stored in json and loaded to memory.
 
 - 1st issue: performance (loading speed)

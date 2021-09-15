@@ -177,15 +177,24 @@ class HabitTrackerStorageHandler extends StorageHandler {
 // * NOTE
 // dropdownmenu needs a unique value as value that is tied with a label,
 // I give it the Key, since they are designed to be unique, and if we make
-// keys be indexes of items in this.items array we can omit getKcal() function
-// and just access the items directly. Something to keep in mind / discuss.
+// keys be indexes of items in this.items array we can omit getItemByKey()
+// function and just access the items directly.
+// Something to keep in mind / discuss.
 class FoodLoggerStorageHandler extends StorageHandler {
   constructor(storageKey) {
     super(storageKey);
   }
 
-  getKcal(itemKey) {
-    return this.items.find(item => item.key === itemKey);
+  getItemByKey(itemKey) {
+    const item = this.items.find(item => item.key === itemKey);
+    if (item === undefined) {
+      console.warn(
+        `Item with given key wasn't found. 
+        This should never happen when choosing item from dropdown. 
+        INVESTIGATE`,
+      );
+    }
+    return item;
   }
 
   addItem(newItem) {
@@ -250,6 +259,7 @@ export const foodLoggerStorageManager = {
       this.key = '';
     }
   },
+  today: new FoodLoggerStorageHandler('food_today'),
   archive: new FoodLoggerStorageHandler('food_archive'),
   base: new FoodLoggerStorageHandler('food_base'),
 };
