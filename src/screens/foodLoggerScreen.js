@@ -23,9 +23,13 @@ export default function FoodLoggerScreen() {
   }
 
   function onAcceptList(baseKey) {
-    const item = foodData.base.getItemByKey(baseKey);
-    foodData.today.addItem(new foodData.item(item.name, item.kcal));
-    setAddModalVisible(false);
+    if (baseKey) {
+      const item = foodData.base.getItemByKey(baseKey);
+      foodData.today.addItem(new foodData.item(item.name, item.kcal));
+    } else {
+      console.log('Nothing was selected. Maybe we can add Toasts some day?');
+    }
+    setAddModalVisible(false); // do we allow accept to close without choosing?
   }
 
   function onStorageUpdated() {
