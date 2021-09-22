@@ -56,16 +56,26 @@ export function TodoListAddModal({onAccept, onCancel, onRequestClose, item}) {
             }}
           />
 
-          <DatePicker date={date} setDate={setDate} />
+          <DatePicker
+            date={date}
+            setDate={setDate}
+            containerStyleOverride={{marginVertical: 12}}
+          />
 
-          <View style={{flexDirection: 'row'}}>
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'space-evenly',
+              alignItems: 'center',
+              marginVertical: 12,
+            }}>
             <OnOffSwitch
               onTitle="Do"
               offTitle="Don't"
               isOn={isNotificationOn}
               setIsOn={setIsNotificationOn}
             />
-            <P style={{paddingVertical: 12}}>send me a notification</P>
+            <P>send me a notification</P>
           </View>
 
           <AcceptCancelButtons
@@ -104,7 +114,6 @@ const styles = StyleSheet.create({
   },
   inputBox: {
     padding: 0, // reset default padding
-    // paddingHorizontal: 8, A suggestion, looks better to me
     borderBottomWidth: 1,
     borderColor: Colors.borderDefault,
     marginVertical: 12,

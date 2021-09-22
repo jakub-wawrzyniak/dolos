@@ -26,9 +26,7 @@ export function FoodLoggerAddModal({
   const [pickerOpen, setOpen] = useState(false);
   const [selectedKeyValue, setSelectedKeyValue] = useState(null);
   const [addToBase, setAddToBase] = useState(false);
-  // ! I think this selection neeeds to be changed, it's temporary
-  // ! I'm thinking we need to re-write ONOFF switch.
-  const [listMode, setListModee] = useState(true);
+  const [listMode, setListMode] = useState(true);
 
   const customTheme = require('../../utils/customDropDownTheme');
   DropDownPicker.addTheme('CUSTOM', customTheme);
@@ -43,16 +41,14 @@ export function FoodLoggerAddModal({
         style={globalStyles.modalBackgroundTransparent}
         onPress={() => {
           Keyboard.dismiss();
-          console.log('clicked background');
         }}>
-        {/* <View style={globalStyles.modalBackgroundTransparent}> */}
-        <View style={[styles.modalContainer, {backgroundColor: 'pink'}]}>
-          {/* this switch looks awful, change it */}
+        <View style={[styles.modalContainer, {borderWidth: 1}]}>
           <OnOffSwitch
             onTitle="list"
             offTitle="manual"
             isOn={listMode}
-            setIsOn={setListModee}
+            setIsOn={setListMode}
+            containerStyle={styles.modePicker}
           />
           {/* true == show list */}
           {listMode && (
@@ -70,18 +66,18 @@ export function FoodLoggerAddModal({
                   value: 'key',
                 }}
               />
-              {/*  If this view isin't here, the dropdown comes out of modal and
+              {/*  If this view isn't here, the dropdown comes out of modal and
                  on the part where it's outside modal you cant press/swipe it.
                  it has height of 200 since this is the max height of dropdown */}
               <View style={{height: 200}}></View>
             </>
           )}
-          {/* false == show manual inputs */}
+          {/* false == show manual */}
           {!listMode && (
             <>
               <TextInput
                 style={styles.inputBox}
-                placeholder="name"
+                placeholder="Name"
                 defaultValue={newItemData.name}
                 onChangeText={text => {
                   newItemData.name = text;
@@ -96,18 +92,24 @@ export function FoodLoggerAddModal({
                 keyboardType="numeric"
                 onChangeText={text => {
                   newItemData.kcal = Number(text);
-                  // TODO implement validation - for now wrong value makes NaN
+                  // ? Maybe additional verification of input is needed?
+                  if (newItemData.kcal === NaN) newItemData.kcal = 0;
                 }}
               />
 
-              <View style={{flexDirection: 'row'}}>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'space-evenly',
+                  paddingVertical: 16,
+                }}>
                 <OnOffSwitch
                   onTitle="Do"
                   offTitle="Don't"
                   isOn={addToBase}
                   setIsOn={setAddToBase}
                 />
-                <P style={{paddingVertical: 12}}>add to a the database</P>
+                <P>add to a the database</P>
               </View>
             </>
           )}
@@ -123,7 +125,6 @@ export function FoodLoggerAddModal({
             }}
           />
         </View>
-        {/* </View> */}
       </Pressable>
     </Modal>
   );
@@ -150,5 +151,11 @@ const styles = StyleSheet.create({
     paddingVertical: 25,
     paddingHorizontal: 35,
     borderRadius: 20,
+  },
+  modePicker: {
+    alignSelf: 'center',
+    marginBottom: 15,
+    width: 200,
+    height: 30,
   },
 });

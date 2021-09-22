@@ -52,9 +52,9 @@ function DayPicker({date, setDate}) {
   );
 }
 
-export default function DatePicker({date, setDate}) {
+export default function DatePicker({date, setDate, containerStyleOverride}) {
   return (
-    <View style={style.view}>
+    <View style={[style.container, containerStyleOverride]}>
       <P>Due by</P>
       <DayPicker date={date} setDate={setDate} />
       <P>at</P>
@@ -64,10 +64,8 @@ export default function DatePicker({date, setDate}) {
 }
 
 const style = StyleSheet.create({
-  view: {
+  container: {
     flexDirection: 'row',
     justifyContent: 'space-around',
-    alignItems: 'center',
-    marginVertical: 20,
   },
 });
