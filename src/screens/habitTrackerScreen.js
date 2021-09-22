@@ -190,12 +190,13 @@ export default function HabitTrackerScreen() {
       )}
       <SectionList
         sections={getSectionedData()}
-        renderItem={({item}) => {
+        renderItem={({item, section}) => {
           return (
             <ListItem
-              content={item.content}
+              item={item}
               onLeftOpen={() => onLeftOpen(item)}
               onRightOpen={() => onRightOpen(item)}
+              showDate={section.title === 'overdue'}
             />
           );
         }}

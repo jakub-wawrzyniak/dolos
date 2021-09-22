@@ -6,8 +6,15 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import Colors from '../global/colors';
 import * as icons from '../global/icons';
 import {P} from '../global/text';
+import {formatDate} from '../utils/dateFormatter';
 
-export default function ListItem({content, onLeftOpen, onRightOpen, onPress}) {
+export default function ListItem({
+  item,
+  onLeftOpen,
+  onRightOpen,
+  onPress,
+  showDate = false,
+}) {
   const leftActions = () => {
     return (
       <Pressable onPress={onRightOpen} style={styles.leftActions}>
@@ -40,8 +47,16 @@ export default function ListItem({content, onLeftOpen, onRightOpen, onPress}) {
       onSwipeableRightOpen={onRightOpen}>
       <Pressable onPress={onPress} style={styles.container}>
         <View style={styles.content}>
-          <P>{content}</P>
+          <P>{item.content}</P>
         </View>
+        {showDate && (
+          <>
+            <View style={styles.line}></View>
+            <View style={styles.dateBox}>
+              <P>{formatDate(new Date(item.dateISO))}</P>
+            </View>
+          </>
+        )}
       </Pressable>
     </Swipeable>
   );
@@ -69,6 +84,15 @@ const styles = StyleSheet.create({
     alignItems: 'flex-start',
     borderRadius: 8,
     marginVertical: 8,
+  },
+  line: {
+    width: 1,
+    backgroundColor: Colors.borderDefault,
+    marginVertical: 8,
+  },
+  dateBox: {
+    padding: 16,
+    justifyContent: 'center',
   },
   rightActions: {
     flex: 1,
