@@ -174,15 +174,59 @@ class HabitTrackerStorageHandler extends StorageHandler {
   }
 }
 
-// I might actually have an idea for another storage handler redesign, but
-// for now it's okay, we'll se in the future. Plus we might need to integrate
-// a database anyway so we'll see - @wojtek
-// *** jokes on me I forgot what it was x d ***
+// * NOTE
+// dropdownmenu needs a unique value as value that is tied with a label,
+// I give it the Key, since they are designed to be unique, and if we make
+// keys be indexes of items in this.items array we can omit getItemByKey()
+// function and just access the items directly.
+// Something to keep in mind / discuss.
+class FoodLoggerStorageHandler extends StorageHandler {
+  constructor(storageKey) {
+    super(storageKey);
+  }
+
+  getItemByKey(itemKey) {
+    const item = this.items.find(item => item.key === itemKey);
+    if (item === undefined) {
+      console.warn(
+        `Item with given key wasn't found. 
+        This should never happen when choosing item from dropdown. 
+        INVESTIGATE`,
+      );
+    }
+    return item;
+  }
+
+  addItem(newItem) {
+    newItem.key = (((Math.random() * 4294967296) / 2 - 1) >>> 0).toString();
+    this.items = [newItem, ...this.items];
+    this.storeData();
+  }
+
+  removeItem(itemKey) {
+    this.items = this.items.filter(item => {
+      if (item.key !== itemKey) {
+        return true;
+      } else {
+        return false;
+      }
+    });
+    this.storeData();
+  }
+
+  /** replaces item with given key with newItem */
+  editItem(newItem) {
+    this.items = this.items.map(item => {
+      if (item.key === newItem.key) {
+        return newItem;
+      }
+      return item;
+    });
+    this.storeData();
+  }
+}
 
 export const todoListStorageHandler = new TodoListStorageHandler('todoList');
-// I need a way to store 4 separate lists with all functionality.
-// and this way I don't need to rewrite the storage handler
-// just 4 handlers for habit tracker, each handles it's one list.
 export const habitTrackerStorageManager = {
   /** to be used when populating lists other than set */
   item: class Item {
@@ -205,4 +249,17 @@ export const habitTrackerStorageManager = {
   current: new HabitTrackerStorageHandler('habit_current'),
   overdue: new HabitTrackerStorageHandler('habit_overdue'),
   archive: new HabitTrackerStorageHandler('habit_archive'),
+};
+export const foodLoggerStorageManager = {
+  item: class Item {
+    constructor(name = '', kcal = 0, dateISO = new Date().toISOString()) {
+      this.name = name;
+      this.kcal = kcal;
+      this.dateISO = dateISO;
+      this.key = '';
+    }
+  },
+  today: new FoodLoggerStorageHandler('food_today'),
+  archive: new FoodLoggerStorageHandler('food_archive'),
+  base: new FoodLoggerStorageHandler('food_base'),
 };

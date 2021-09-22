@@ -129,6 +129,7 @@ export default function HabitTrackerScreen() {
       );
       // ! when we upgrade from react native 0.64 to 0.65 we have to change this
       // https://reactnative.dev/docs/appstate#removeeventlistener
+      // intellisense says its wrong but it's not, we're on react native 0.64
       AppState.removeEventListener('change', AppStateChangeHandler);
     };
   }, []);

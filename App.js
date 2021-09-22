@@ -5,6 +5,7 @@ import {createDrawerNavigator} from '@react-navigation/drawer';
 import HomeScreen from './src/screens/homeScreen';
 import TodoListScreen from './src/screens/todoList-mainScreen';
 import HabitTrackerScreen from './src/screens/habitTrackerScreen';
+import FoodLoggerScreen from './src/screens/foodLoggerScreen';
 
 import Colors from './src/global/colors';
 
@@ -36,6 +37,7 @@ export default function App() {
         <Drawer.Screen name="Home" component={HomeScreen} />
         <Drawer.Screen name="ToDo List" component={TodoListScreen} />
         <Drawer.Screen name="Habit Tracker" component={HabitTrackerScreen} />
+        <Drawer.Screen name="Food Logger" component={FoodLoggerScreen} />
       </Drawer.Navigator>
     </NavigationContainer>
   );
