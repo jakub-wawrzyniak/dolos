@@ -125,11 +125,14 @@ class HabitTrackerStorageHandler extends StorageHandler {
       this.insertItem(newItem);
       return;
     }
-    // newItem.key = !!this.items[0]
-    //   ? Number(this.items[0].key.charAt(0)) + 1 + this.storageKey
-    //   : 1 + this.storageKey;
     newItem.key = (((Math.random() * 4294967296) / 2 - 1) >>> 0).toString();
-    this.items = [newItem, ...this.items];
+    if (this.storageKey === 'habit_set') {
+      // We'd like the set to be reversed since when user adds a new habit I
+      // assume they'd want it to appear at the top when spawned the next day.
+      this.items = [...this.items, newItem];
+    } else {
+      this.items = [newItem, ...this.items];
+    }
     this.storeData();
   }
 

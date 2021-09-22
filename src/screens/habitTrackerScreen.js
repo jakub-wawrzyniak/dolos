@@ -1,11 +1,14 @@
 import React, {useEffect, useState} from 'react';
 import {View, Text, SectionList, AppState} from 'react-native';
+import {Swipeable} from 'react-native-gesture-handler';
 
 import globalStyles from '../global/styles';
 import Colors from '../global/colors';
 import RoundButton from '../components/roundButton';
 import {habitTrackerStorageManager as habitData} from '../utils/storageHandler';
-import {Swipeable} from 'react-native-gesture-handler';
+import Separator from '../components/separator';
+import ListItem from '../components/habitTrackerListItem';
+import HabitTrackerAddModal from '../components/modals/habitTracker-newItemModal';
 
 /* ALGORITHM EXPLANATION
   * pseudocode
@@ -107,6 +110,7 @@ export default function HabitTrackerScreen() {
 
   const [currentItems, setCurrentItems] = useState([]);
   const [overdueItems, setOverdueItems] = useState([]);
+  const [addModalOpen, setAddModalOpen] = useState(false);
 
   useEffect(() => {
     // load data & perform data logic
@@ -131,6 +135,8 @@ export default function HabitTrackerScreen() {
       // https://reactnative.dev/docs/appstate#removeeventlistener
       // intellisense says its wrong but it's not, we're on react native 0.64
       AppState.removeEventListener('change', AppStateChangeHandler);
+      // * intellisense is telling me this func doesn't exist on AppState, but
+      // * it does, and the other approach doesn't work so we do this.
     };
   }, []);
 
@@ -149,17 +155,6 @@ export default function HabitTrackerScreen() {
     return sections;
   }
 
-  const temp_leftActions = () => (
-    <View style={{flex: 1}}>
-      <Text>Swipe to mark as COMPLETED</Text>
-    </View>
-  );
-  const temp_rightActions = () => (
-    <View style={{flex: 1}}>
-      <Text style={{alignSelf: 'flex-end'}}>Swipe to mark as FAILED</Text>
-    </View>
-  );
-
   const onLeftOpen = item => {
     item.completed = true;
     const key = item.key;
@@ -174,41 +169,44 @@ export default function HabitTrackerScreen() {
     habitData.overdue.removeItem(key);
     habitData.current.removeItem(key);
   };
+  const onAccept = itemData => {
+    const itemTemplate = new habitData.itemTemplate(itemData.content);
+    habitData.set.addItem(itemTemplate);
+    habitData.current.addItem(new habitData.item(itemTemplate.content));
+    setAddModalOpen(false);
+  };
+  const onCancel = () => {
+    setAddModalOpen(false);
+  };
 
   return (
     <View style={globalStyles.container}>
+      {addModalOpen && (
+        <HabitTrackerAddModal
+          onAccept={onAccept}
+          onCancel={onCancel}
+          onRequestClose={onCancel}
+        />
+      )}
       <SectionList
         sections={getSectionedData()}
         renderItem={({item}) => {
           return (
-            // temporary - implement proper UI
-            <Swipeable
-              renderLeftActions={temp_leftActions}
-              renderRightActions={temp_rightActions}
-              onSwipeableLeftOpen={() => onLeftOpen(item)}
-              onSwipeableRightOpen={() => onRightOpen(item)}>
-              <View style={{padding: 10, backgroundColor: 'pink'}}>
-                <Text>{new Date(item.dateISO).toLocaleString()}</Text>
-              </View>
-            </Swipeable>
+            <ListItem
+              content={item.content}
+              onLeftOpen={() => onLeftOpen(item)}
+              onRightOpen={() => onRightOpen(item)}
+            />
           );
         }}
         renderSectionHeader={({section}) => {
-          return (
-            <View>
-              <Text>{section.title}</Text>
-            </View>
-          );
+          return <Separator title={section.title} />;
         }}
       />
       <RoundButton
         title="Add Item"
         color={Colors.acceptGreen}
-        onPress={() => {
-          const itemTemplate = new habitData.itemTemplate('temporary habit');
-          habitData.set.addItem(itemTemplate);
-          habitData.current.addItem(new habitData.item(itemTemplate.content));
-        }}
+        onPress={() => setAddModalOpen(true)}
       />
       <RoundButton
         title="log storage"
