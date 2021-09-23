@@ -10,6 +10,10 @@ A Management app built with React Native.
 - Ditch the modal and use an "ADD SCREEN" but this breaks consistency.
   Some more testing should be done as to what causes the effect. Also, I would like not to change to package that is use for the dropdown. Basically this is a design problem that needs to be addressed.
 
+# food logger
+
+I'd like to show total kcal for a day, but do I store it as an entry in day list? how does it relate to archive? maybe rework the storage handler to store day as an object which contains the list of items and total separately? We'll have to be calculating it somehow for feedback. We need to discuss this.
+
 # habit tracker
 
 Habit tracker is pretty much done, all there is to do more is the feedback screen (and logic, I have not touched it) and maybe some sort of notification manager that sends a notification once or twice a day to ermind about habits, but this will come later I suppose.

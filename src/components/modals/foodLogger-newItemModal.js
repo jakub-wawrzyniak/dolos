@@ -42,7 +42,7 @@ export function FoodLoggerAddModal({
         onPress={() => {
           Keyboard.dismiss();
         }}>
-        <View style={[styles.modalContainer, {borderWidth: 1}]}>
+        <View style={styles.modalContainer}>
           <OnOffSwitch
             onTitle="list"
             offTitle="manual"

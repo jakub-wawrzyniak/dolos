@@ -8,7 +8,7 @@ import * as icons from '../global/icons';
 import RoundButton from '../components/roundButton';
 import {habitTrackerStorageManager as habitData} from '../utils/storageHandler';
 import Separator from '../components/separator';
-import ListItem from '../components/habitTrackerListItem';
+import ListItem from '../components/listItem-HabitTracker';
 import HabitTrackerAddModal from '../components/modals/habitTracker-newItemModal';
 import {P} from '../global/text';
 
