@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {View, SectionList} from 'react-native';
 
 import globalStyles from '../global/styles';
-import ListItem from '../components/todoListItem';
+import ListItem from '../components/listItem-TodoList';
 import Colors from '../global/colors';
 import {TodoListAddModal} from '../components/modals/todoList-newItemModal';
 import {todoListStorageHandler as listData} from '../utils/storageHandler';

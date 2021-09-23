@@ -33,6 +33,9 @@ export default function App() {
             elevation: 0,
           },
           headerTitleAlign: 'center',
+          headerTitleStyle: {
+            fontFamily: 'LEMONMILK-Regular',
+          },
         }}>
         <Drawer.Screen name="Home" component={HomeScreen} />
         <Drawer.Screen name="ToDo List" component={TodoListScreen} />

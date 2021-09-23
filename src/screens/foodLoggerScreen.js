@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {View, StyleSheet, FlatList, AppState} from 'react-native';
 
 import globalStyles from '../global/styles';
@@ -7,7 +7,7 @@ import * as Text from '../global/text';
 import RoundButton from '../components/roundButton';
 import {foodLoggerStorageManager as foodData} from '../utils/storageHandler';
 import {FoodLoggerAddModal} from '../components/modals/foodLogger-newItemModal';
-import {useEffect} from 'react/cjs/react.development';
+import ListItem from '../components/listItem-FoodLogger';
 
 export default function FoodLoggerScreen() {
   const [addModalVisible, setAddModalVisible] = useState(false);
@@ -101,15 +101,13 @@ export default function FoodLoggerScreen() {
           setPickerData={setPickerData}
         />
       )}
-      <Text.H1>Today's log:</Text.H1>
+      <Text.H1 style={{textAlign: 'center'}}>Today's log:</Text.H1>
+      <View style={styles.line}></View>
       <FlatList
         data={todaysData}
-        renderItem={({item}) => (
-          <Text.P>
-            {item.name} - {item.kcal} Kcal
-          </Text.P>
-        )}
+        renderItem={({item}) => <ListItem item={item} />}
       />
+
       <RoundButton
         title="Add to database"
         style={{backgroundColor: Colors.acceptGreen}}
@@ -142,3 +140,12 @@ export default function FoodLoggerScreen() {
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  line: {
+    height: 1,
+    backgroundColor: Colors.borderStrong,
+    marginVertical: 8,
+    marginHorizontal: 12,
+  },
+});
