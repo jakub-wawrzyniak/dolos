@@ -10,6 +10,10 @@ A Management app built with React Native.
 - Ditch the modal and use an "ADD SCREEN" but this breaks consistency.
   Some more testing should be done as to what causes the effect. Also, I would like not to change to package that is use for the dropdown. Basically this is a design problem that needs to be addressed.
 
+# habit tracker
+
+Habit tracker is pretty much done, all there is to do more is the feedback screen (and logic, I have not touched it) and maybe some sort of notification manager that sends a notification once or twice a day to ermind about habits, but this will come later I suppose.
+
 # archive & storage discussion
 
 we might want to test the performance of async storage with really long list of archive, I mean like 4 habits/day for 2 years which gives us 4*365*2 = 2920 so say 5000 entries in archive list, all stored in json and loaded to memory.
