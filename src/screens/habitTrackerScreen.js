@@ -1,14 +1,16 @@
 import React, {useEffect, useState} from 'react';
-import {View, Text, SectionList, AppState} from 'react-native';
-import {Swipeable} from 'react-native-gesture-handler';
+import {View, SectionList, AppState} from 'react-native';
+import Icon from 'react-native-vector-icons/Ionicons';
 
 import globalStyles from '../global/styles';
 import Colors from '../global/colors';
+import * as icons from '../global/icons';
 import RoundButton from '../components/roundButton';
 import {habitTrackerStorageManager as habitData} from '../utils/storageHandler';
 import Separator from '../components/separator';
 import ListItem from '../components/habitTrackerListItem';
 import HabitTrackerAddModal from '../components/modals/habitTracker-newItemModal';
+import {P} from '../global/text';
 
 /* ALGORITHM EXPLANATION
   * pseudocode
@@ -179,6 +181,22 @@ export default function HabitTrackerScreen() {
     setAddModalOpen(false);
   };
 
+  const AllClearWidget = () => (
+    <View
+      style={{
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: 15,
+      }}>
+      <P>You're all caught up for today</P>
+      <Icon
+        name={icons.names.tick}
+        size={icons.sizes.large}
+        color={Colors.acceptGreen}
+      />
+    </View>
+  );
+
   return (
     <View style={globalStyles.container}>
       {addModalOpen && (
@@ -188,6 +206,7 @@ export default function HabitTrackerScreen() {
           onRequestClose={onCancel}
         />
       )}
+
       <SectionList
         sections={getSectionedData()}
         renderItem={({item, section}) => {
@@ -203,6 +222,10 @@ export default function HabitTrackerScreen() {
         renderSectionHeader={({section}) => {
           return <Separator title={section.title} />;
         }}
+        ListFooterComponent={() =>
+          currentItems.length === 0 &&
+          overdueItems.length === 0 && <AllClearWidget />
+        }
       />
       <RoundButton
         title="Add Item"

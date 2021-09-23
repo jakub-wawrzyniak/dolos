@@ -8,4 +8,5 @@ export const names = {
 
 export const sizes = {
   default: 25,
+  large: 45,
 };
